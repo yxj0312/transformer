@@ -15,6 +15,7 @@
     </head>
     <body class="font-sans text-gray-900 text-sm">
         <div class="min-h-screen bg-gray-100">
+            @include('layouts.navbar')
 
             <!-- Page Heading -->
             @if (isset($header))
