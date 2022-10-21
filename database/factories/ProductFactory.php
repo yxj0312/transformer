@@ -17,7 +17,8 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => ucwords($this->faker->words(4, true)),
+            'description' => $this->faker->paragraph(5)
         ];
     }
 }
