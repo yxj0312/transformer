@@ -32,8 +32,15 @@ class ShowProductsTest extends TestCase
         $response->assertSee($productOne->description);
         $response->assertSee($productTwo->name);
         $response->assertSee($productTwo->description);
+    }
 
+    /** @test */
+    function test_showing_products_api()
+    {
+        $this->withoutExceptionHandling();
+        $response = $this->getJson('/api/products');
 
+        $response->assertStatus(200);
     }
     
 }

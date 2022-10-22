@@ -20,6 +20,11 @@ class ProductController extends Controller
         ]);
     }
 
+    public function apiIndex()
+    {
+        return Product::all();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
