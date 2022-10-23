@@ -38,9 +38,21 @@ class ShowProductsTest extends TestCase
     function test_showing_products_api()
     {
         $this->withoutExceptionHandling();
+        $product = Product::factory()->create();
+
         $response = $this->getJson('/api/products');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJson([
+                'products' => [
+                    'id' => 1,
+                    'name' => $product->name,
+                    'description' => $product->description,
+                    'slug'=> NULL,
+                    'created_at' => $product->created_at->toAtomString(),
+                    'updated_at' => $product->updated_at->toAtomString()
+                ]
+            ]);
     }
     
 }
