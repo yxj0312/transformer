@@ -44,15 +44,12 @@ class ShowProductsTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'products' => [
+                [
                     'id' => 1,
                     'name' => $product->name,
-                    'description' => $product->description,
                     'slug'=> NULL,
-                    'created_at' => $product->created_at->toAtomString(),
-                    'updated_at' => $product->updated_at->toAtomString()
+                    'description' => $product->description,
                 ]
             ]);
-    }
-    
+    } 
 }
