@@ -24,7 +24,7 @@ class ProductController extends Controller
     public function apiIndex()
     {
         return ProductResource::collection(Product::all());
-        return Product::all();
+        // return Product::all();
     }
 
     /**
