@@ -23,7 +23,7 @@ class ProductController extends Controller
 
     public function apiIndex()
     {
-        return ProductResource::collection(Product::all());
+        return ProductResource::collection(Product::all())->response()->setStatusCode(200);
         // return Product::all();
     }
 
