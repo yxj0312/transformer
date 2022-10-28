@@ -40,7 +40,7 @@ class ShowProductsTest extends TestCase
         $this->withoutExceptionHandling();
         $product = Product::factory()->create();
 
-        $response = $this->getJson('/api/products');
+        $response = $this->getJson(route('products.index'));
 
         $response->assertStatus(200)
             ->assertJson([
