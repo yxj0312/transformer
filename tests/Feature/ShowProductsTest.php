@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class ShowProductsTest extends TestCase
@@ -42,14 +43,24 @@ class ShowProductsTest extends TestCase
 
         $response = $this->getJson(route('products.index'));
 
-        $response->assertStatus(200)
-            ->assertJson([
-                [
-                    'id' => 1,
-                    'name' => $product->name,
-                    'slug'=> NULL,
-                    'description' => $product->description,
-                ]
-            ]);
+        // $response->assertStatus(200)
+        //     ->assertJson([
+        //         [
+        //             'id' => 1,
+        //             'name' => $product->name,
+        //             'slug'=> NULL,
+        //             'description' => $product->description,
+        //         ]
+        //     ]);
+
+        $response
+            ->assertJson(fn (AssertableJson $json) =>
+            $json->has(1)
+                ->first(fn ($json) =>
+                    $json->where('id', 1)
+                        ->where('name', $product->name)
+                        ->etc()
+                )
+        );
     } 
 }
