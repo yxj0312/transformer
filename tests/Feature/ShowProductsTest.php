@@ -59,6 +59,7 @@ class ShowProductsTest extends TestCase
                 ->first(fn ($json) =>
                     $json->where('id', 1)
                         ->where('name', $product->name)
+                        ->where('description', $product->description)
                         ->etc()
                 )
         );
