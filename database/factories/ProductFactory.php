@@ -18,7 +18,8 @@ class ProductFactory extends Factory
     {
         return [
             'name' => ucwords($this->faker->words(4, true)),
-            'description' => $this->faker->paragraph(5)
+            'description' => $this->faker->paragraph(5),
+            'price' => $this->faker->randomFloat(2, 20, 1000)
         ];
     }
 }
