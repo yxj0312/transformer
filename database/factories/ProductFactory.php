@@ -22,7 +22,7 @@ class ProductFactory extends Factory
             'description' => $this->faker->paragraph(5),
             'price' => $this->faker->randomFloat(2, 20, 1000),
             'image' => 'products/dummy/laptop-1.jpg',
-             'quantity' => 10,
+            'quantity' => 10,
         ];
     }
 }
