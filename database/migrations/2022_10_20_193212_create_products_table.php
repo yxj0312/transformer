@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->text('description');
             $table->float('price');
+            $table->string('image')->nullable();
+            $table->unsignedInteger('quantity')->default(10);
             $table->timestamps();
         });
     }
