@@ -17,13 +17,13 @@ class ProductController extends Controller
     public function index()
     {
         return view('product.index', [
-            'products' => Product::all()
+            'products' => Product::query()->paginate(10)
         ]);
     }
 
     public function apiIndex()
     {
-        return ProductResource::collection(Product::all())->response()->setStatusCode(200);
+        return ProductResource::collection(Product::query()->paginate(10))->response()->setStatusCode(200);
         // return Product::all();
     }
 
