@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -64,4 +65,10 @@ class ShowProductsTest extends TestCase
                 )
         );
     } 
+
+    /** @test */
+    function it_returns_the_products_with_the_categories()
+    {
+        $categories = Category::factory()->create();
+    }
 }
