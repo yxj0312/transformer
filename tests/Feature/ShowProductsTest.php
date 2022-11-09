@@ -69,6 +69,11 @@ class ShowProductsTest extends TestCase
     /** @test */
     function it_returns_the_products_with_the_categories()
     {
-        $categories = Category::factory()->create();
+        $categories = Category::factory()->count(3)->create();
+        $products = Product::factory()->count(3)->make()->each(function ($product) use($categories){
+            $product->categories()->attach($categories);
+        });
+
+        dd($products);
     }
 }
