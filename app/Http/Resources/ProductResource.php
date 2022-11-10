@@ -22,8 +22,8 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
-            'categories' =>  $this->whenPivotLoaded('categories', function () {
-            return $this->pivot;
+            'categories' =>  $this->whenPivotLoaded('category_product', function () {
+            return $this->pivot->category_id;
         }),
         ];
     }
