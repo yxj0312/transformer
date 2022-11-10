@@ -21,7 +21,10 @@ class ProductResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'description' => $this->description
+            'description' => $this->description,
+            'categories' =>  $this->whenPivotLoaded('categories', function () {
+            return $this->pivot;
+        }),
         ];
     }
 }
