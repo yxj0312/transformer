@@ -70,10 +70,23 @@ class ShowProductsTest extends TestCase
     function it_returns_the_products_with_the_categories()
     {
         $categories = Category::factory()->count(3)->create();
-        $products = Product::factory()->count(3)->make()->each(function ($product) use($categories){
+        // dd($categories->toArray());
+        $products = Product::factory()->count(3)->create()->each(function ($product) use($categories){
             $product->categories()->attach($categories);
+            dd($product->categories()->get());
+
         });
 
-        dd($products);
+        $products->each(function($product){
+            dd($product->pivot);
+        });
+
+        dd();
+
+        $response = $this->getJson(route('products.index'));
+
+        dd($response->json());
+
+        dd($products->toArray());
     }
 }
