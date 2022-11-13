@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/** @mixin \App\Models\Category **/
 class CategoryResource extends ResourceCollection
 {
     /**
