@@ -22,9 +22,7 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'slug' => $this->slug,
             'description' => $this->description,
-            'categories' =>  $this->whenPivotLoaded('category_product', function () {
-                return $this->pivot->category_id;
-            }),
+            'categories' =>  CategoryResource::collection($this->whenLoaded('categories')),
         ];
     }
 }

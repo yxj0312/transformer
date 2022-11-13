@@ -73,20 +73,12 @@ class ShowProductsTest extends TestCase
         // dd($categories->toArray());
         $products = Product::factory()->count(3)->create()->each(function ($product) use($categories){
             $product->categories()->attach($categories);
-            dd($product->categories()->get());
-
         });
-
-        $products->each(function($product){
-            dd($product->pivot);
-        });
-
-        dd();
 
         $response = $this->getJson(route('products.index'));
 
-        dd($response->json());
+        dd($response);
 
-        dd($products->toArray());
+        // dd($products->toArray());
     }
 }
