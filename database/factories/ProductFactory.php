@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,5 +26,13 @@ class ProductFactory extends Factory
             'image' => 'products/dummy/laptop-1.jpg',
             'quantity' => 10,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Product $product) {
+            $product->categories()
+                ->attach(Category::inRandomOrder()->take(random_int(1, 5))->pluck('id'));
+        });
     }
 }
