@@ -75,10 +75,21 @@ class ShowProductsTest extends TestCase
             $product->categories()->attach($categories);
         });
 
+        dd($categories->pluck('id'));
+
         $response = $this->getJson(route('products.index'));
 
-        dd($response);
+        $response->assertJson(fn (AssertableJson $json) =>
+        $json->has(1)
+                ->first(fn ($json) =>
+                    $json->where('id', 1)
+                        ->where('name', $products->first()->name)
+                        ->where('description', $products->first()->description)
+                        ->where('categories', $categories->pluck('id'))
+                        ->etc()
+                )
 
+        );
         // dd($products->toArray());
     }
 }
