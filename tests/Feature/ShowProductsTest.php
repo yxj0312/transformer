@@ -69,25 +69,22 @@ class ShowProductsTest extends TestCase
     /** @test */
     function it_returns_the_products_with_the_categories()
     {
+        // $this->withoutExceptionHandling();
         $categories = Category::factory()->count(3)->create();
         // dd($categories->toArray());
         $products = Product::factory()->count(3)->create()->each(function ($product) use($categories){
             $product->categories()->attach($categories);
         });
 
-        dd($categories->pluck('id'));
+        // dd($categories->pluck('id'));
 
         $response = $this->getJson(route('products.index'));
 
+        dd($response->getContent());
+
         $response->assertJson(fn (AssertableJson $json) =>
-        $json->has(1)
-                ->first(fn ($json) =>
-                    $json->where('id', 1)
-                        ->where('name', $products->first()->name)
-                        ->where('description', $products->first()->description)
-                        ->where('categories', $categories->pluck('id'))
-                        ->etc()
-                )
+        $json->has(3)
+                ->has('products', 3)
 
         );
         // dd($products->toArray());

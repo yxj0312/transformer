@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Resources\ProductResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
 
