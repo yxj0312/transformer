@@ -39,31 +39,18 @@ class ShowProductsTest extends TestCase
     /** @test */
     function test_showing_products_api()
     {
-        $this->withoutExceptionHandling();
         $product = Product::factory()->create();
-
         $response = $this->getJson(route('products.index'));
-
-        // $response->assertStatus(200)
-        //     ->assertJson([
-        //         [
-        //             'id' => 1,
-        //             'name' => $product->name,
-        //             'slug'=> NULL,
-        //             'description' => $product->description,
-        //         ]
-        //     ]);
-
         $response
             ->assertJson(fn (AssertableJson $json) =>
-            $json->has(3)
-                ->first(fn ($json) =>
-                    dump($json->toArray())
-                    // $json->where('id', 1)
-                    //     ->where('name', $product->name)
-                    //     ->where('description', $product->description)
-                    //     ->etc()
-                )
+            $json->has('data', 1, fn ($json) =>  
+                $json->where('id', 1)
+                     ->where('name', $product->name)
+                     ->where('slug', $product->slug)
+                     ->where('description', $product->description)
+                     ->where('categories', $product->categories)
+                ->etc()
+                )->etc()
         );
     } 
 
