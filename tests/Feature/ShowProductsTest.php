@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -57,24 +58,19 @@ class ShowProductsTest extends TestCase
     /** @test */
     function it_returns_the_products_with_the_categories()
     {
-        // $this->withoutExceptionHandling();
         $categories = Category::factory()->count(3)->create();
-        // dd($categories->toArray());
         $products = Product::factory()->count(3)->create()->each(function ($product) use($categories){
             $product->categories()->attach($categories);
         });
-
-        // dd($categories->pluck('id'));
-
+        // dd($categories->first()->pluck('id'));
         $response = $this->getJson(route('products.index'));
-
-        dd($response->getContent());
-
         $response->assertJson(fn (AssertableJson $json) =>
-        $json->has(3)
-                ->has('products', 3)
-
+            $json->has('data', 3, fn ($json) =>
+            dump($json)
+                // $json->where('id', 1)
+                //     ->where('categories.0.id', $categories->first()->pluck('id'))
+                //     ->etc()
+            )->etc()
         );
-        // dd($products->toArray());
     }
 }
