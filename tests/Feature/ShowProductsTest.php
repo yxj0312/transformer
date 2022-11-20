@@ -66,10 +66,11 @@ class ShowProductsTest extends TestCase
         $response = $this->getJson(route('products.index'));
         $response->assertJson(fn (AssertableJson $json) =>
             $json->has('data', 3, fn ($json) =>
-            dump($json)
-                // $json->where('id', 1)
-                //     ->where('categories.0.id', $categories->first()->pluck('id'))
-                //     ->etc()
+                $json->where('id', 1)
+                    ->where('name', $products->first()->name)
+                    ->has('categories')
+                    ->where('categories',[$categories->first()->id,$categories->first()->name, $categories->first()->slug ])
+                ->etc()
             )->etc()
         );
     }
