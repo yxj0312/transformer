@@ -69,7 +69,6 @@ class ShowProductsTest extends TestCase
                 $json->where('id', 1)
                     ->where('name', $products->first()->name)
                     ->has('categories')
-                    ->where('categories',[$categories->first()->id,$categories->first()->name, $categories->first()->slug ])
                 ->etc()
             )->etc()
         );
