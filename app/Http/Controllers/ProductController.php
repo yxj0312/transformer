@@ -24,7 +24,6 @@ class ProductController extends Controller
     public function apiIndex()
     {
         return ProductResource::collection(Product::query()->paginate(10))->response()->setStatusCode(200);
-        // return Product::all();
     }
 
     /**
