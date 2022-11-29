@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateCategoryProductPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('category_product', function (Blueprint $table) {
-             $table->increments('id');
-
-            $table->integer('product_id')->unsigned()->nullable();
-            $table->integer('category_id')->unsigned()->nullable();
-
-            $table->timestamps();
+            $table->unsignedBigInteger('category_id')->index();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->unsignedBigInteger('product_id')->index();
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->primary(['category_id', 'product_id']);
         });
     }
 
@@ -32,4 +31,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('category_product');
     }
-};
+}
