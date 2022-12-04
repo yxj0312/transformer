@@ -59,10 +59,11 @@ class ShowProductsTest extends TestCase
     function it_returns_the_products_with_the_categories()
     {
         $categories = Category::factory()->count(3)->create();
+
         $products = Product::factory()->count(3)->create()->each(function ($product) use($categories){
-            $product->categories()->attach($categories);
+            $product->categories()->sync($categories);
+
         });
-        // dd($categories->first()->pluck('id'));
         $response = $this->getJson(route('products.index'));
         $response->assertJson(fn (AssertableJson $json) =>
             $json->has('data', 3, fn ($json) =>
