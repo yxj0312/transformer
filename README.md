@@ -95,3 +95,248 @@ UPDATE 商品表 SET 现价 = 原价 WHERE id = 商品id;
 (1) Getting started with Laravel 8, Vue 3 and Tailwind. <https://dev.to/rjzauner/getting-started-with-laravel-8-vue-3-and-tailwind-5gm9>.
 (2) Create Dynamic Drop-down component with Vue 3, Tailwind CSS and Laravel .... <https://dev.to/moose_said/create-dynamic-drop-down-component-with-vue-3-tailwind-css-and-laravel-9-2k4o>.
 (3) Creating a project template using Laravel, Vue 3, and Tailwind - Part 3. <https://dev.to/heynolnor/creating-a-project-template-using-laravel-vue-3-and-tailwind-part-3-1klj>.
+
+<https://github.com/WailanTirajoh/Laravel-Hotel/>
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateProductsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description');
+            $table->decimal('price', 8, 2);
+            $table->string('image_url')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('products');
+    }
+}
+
+class CreateOrdersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->decimal('total_price', 8, 2);
+            $table->enum('status', ['pending', 'processing', 'completed']);
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('orders');
+    }
+}
+
+class CreateOrderItemsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('order_items', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('product_id');
+            $table->integer('quantity');
+            $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->foreign('product_id')->references('id')->on('products');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('order_items');
+    }
+}
+
+class CreateUsersTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+}
+
+class CreatePaymentsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('order_id');
+            $table->decimal('amount_paid', 8, 2);
+            $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('orders');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('payments');
+    }
+}
+
+class OrderProduct extends Model
+{
+    protected $table = 'order_product';
+
+    protected $fillable = ['order_id', 'product_id', 'amount'];
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+}
+
+class ProductCategory extends Model
+{
+    protected $table = 'product_category';
+
+    protected $fillable = ['product_id', 'category_id'];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+}
+
+
+Schema::create('order_product', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedBigInteger('order_id');
+    $table->unsignedBigInteger('product_id');
+    $table->integer('amount');
+    $table->timestamps();
+
+    $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+    $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+});
+
+
+Schema::create('order_product', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedBigInteger('order_id');
+    $table->unsignedBigInteger('product_id');
+    $table->integer('amount');
+    $table->timestamps();
+
+    $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+    $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+});
+
+Schema::create('product_category', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedBigInteger('product_id');
+    $table->unsignedBigInteger('category_id');
+    $table->timestamps();
+
+    $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+    $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+});
+
+
+```
+
+这里的order_product是orders表和products表之间的中间表，包括order_id、product_id和amount等字段；product_category是products表和categories表之间的中间表，包括product_id和category_id等字段。希望这可以帮到你。如果你有其他问题，可以随时问我哦！
+
+电商平台的数据库结构因平台而异，但是一般都包括用户表、商品表、订单表、购物车表等。这里有一些关于电商网站数据库设计的文章，其中包括了一些常见的电商项目的数据库表设计¹²³⁵。希望这些可以帮到你。
+
+源: 与必应的对话， 2023/5/15
+(1) MySQL数据库——案例：电子商务网站设计 - CSDN博客. <https://bing.com/search?q=%e7%94%b5%e5%95%86%e5%b9%b3%e5%8f%b0+%e6%95%b0%e6%8d%ae%e5%ba%93+%e7%bb%93%e6%9e%84>.
+(2) 电商系统架构全链路解析 - 知乎 - 知乎专栏. <https://zhuanlan.zhihu.com/p/150013096>.
+(3) 关于电商网站数据库的设计？ - 知乎. <https://www.zhihu.com/question/27607346>.
+(4) （转）常见电商项目的数据库表设计（MySQL版） - 知乎. <https://zhuanlan.zhihu.com/p/260013493>.
+(5) MySQL数据库——案例：电子商务网站设计 - CSDN博客. <https://blog.csdn.net/sem00000/article/details/106292969>.
