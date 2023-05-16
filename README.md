@@ -340,3 +340,1094 @@ Schema::create('product_category', function (Blueprint $table) {
 (3) 关于电商网站数据库的设计？ - 知乎. <https://www.zhihu.com/question/27607346>.
 (4) （转）常见电商项目的数据库表设计（MySQL版） - 知乎. <https://zhuanlan.zhihu.com/p/260013493>.
 (5) MySQL数据库——案例：电子商务网站设计 - CSDN博客. <https://blog.csdn.net/sem00000/article/details/106292969>.
+
+当设计一个电商平台的数据结构时，你可以考虑以下几个主要的数据库表格：商品（Products），种类（Categories），订单（Orders），支付（Payments）。下面是一个使用Laravel框架的数据库迁移（migrations）和模型（model）控制器的示例代码：
+
+1. 创建商品（Products）表格的数据库迁移：
+
+```php
+php artisan make:migration create_products_table --create=products
+```
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateProductsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description');
+            $table->decimal('price', 8, 2);
+            // 可根据需求添加其他字段
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('products');
+    }
+}
+```
+
+2. 创建种类（Categories）表格的数据库迁移：
+
+```php
+php artisan make:migration create_categories_table --create=categories
+```
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateCategoriesTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('categories');
+    }
+}
+```
+
+3. 创建订单（Orders）表格的数据库迁移：
+
+```php
+php artisan make:migration create_orders_table --create=orders
+```
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateOrdersTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->decimal('total_amount', 10, 2);
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('orders');
+    }
+}
+```
+
+4. 创建支付（Payments）表格的数据库迁移：
+
+```php
+php artisan make:migration create_payments_table --create=payments
+```
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePaymentsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('payments', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('order_id');
+            $table->foreign('order_id')->references('id')->on('orders');
+            $table->decimal('amount', 10, 2);
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('payments');
+    }
+}
+```
+
+5. 创建商品（Product）模型：
+
+```php
+php artisan make:model Product
+```
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $fillable = ['name', 'description', 'price'];
+    
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category');
+    }
+}
+```
+
+6
+
+. 创建种类（Category）模型：
+
+```php
+php artisan make:model Category
+```
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Category extends Model
+{
+    protected $fillable = ['name'];
+    
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_category');
+    }
+}
+```
+
+7. 创建订单（Order）模型：
+
+```php
+php artisan make:model Order
+```
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Order extends Model
+{
+    protected $fillable = ['user_id', 'total_amount'];
+    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+}
+```
+
+8. 创建支付（Payment）模型：
+
+```php
+php artisan make:model Payment
+```
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Payment extends Model
+{
+    protected $fillable = ['order_id', 'amount'];
+    
+    public function order()
+    {
+        return $this->belongsTo(Order::class);
+    }
+}
+```
+
+以上代码示例包括了电商平台的数据库表格以及相应的模型和关联关系。你可以根据实际需求进行修改和扩展。记得运行数据库迁移来创建对应的表格：
+
+```php
+php artisan migrate
+```
+
+当使用PHPUnit为每个模型生成相应的单元测试时，你可以为每个模型创建一个单独的测试类，并在该类中编写适当的测试用例。以下是为每个模型创建单元测试的示例：
+
+1. Product模型的单元测试（ProductTest.php）：
+
+```php
+use Tests\TestCase;
+use App\Models\Product;
+
+class ProductTest extends TestCase
+{
+    public function testProductCreation()
+    {
+        $productData = [
+            'name' => 'Test Product',
+            'description' => 'This is a test product',
+            'price' => 9.99,
+        ];
+
+        $product = Product::create($productData);
+
+        $this->assertInstanceOf(Product::class, $product);
+        $this->assertEquals($productData['name'], $product->name);
+        $this->assertEquals($productData['description'], $product->description);
+        $this->assertEquals($productData['price'], $product->price);
+    }
+
+    // 添加其他测试用例，例如测试关联关系、查询方法等
+}
+```
+
+2. Category模型的单元测试（CategoryTest.php）：
+
+```php
+use Tests\TestCase;
+use App\Models\Category;
+
+class CategoryTest extends TestCase
+{
+    public function testCategoryCreation()
+    {
+        $categoryData = [
+            'name' => 'Test Category',
+        ];
+
+        $category = Category::create($categoryData);
+
+        $this->assertInstanceOf(Category::class, $category);
+        $this->assertEquals($categoryData['name'], $category->name);
+    }
+
+    // 添加其他测试用例，例如测试关联关系、查询方法等
+}
+```
+
+3. Order模型的单元测试（OrderTest.php）：
+
+```php
+use Tests\TestCase;
+use App\Models\Order;
+
+class OrderTest extends TestCase
+{
+    public function testOrderCreation()
+    {
+        $orderData = [
+            'user_id' => 1,
+            'total_amount' => 99.99,
+        ];
+
+        $order = Order::create($orderData);
+
+        $this->assertInstanceOf(Order::class, $order);
+        $this->assertEquals($orderData['user_id'], $order->user_id);
+        $this->assertEquals($orderData['total_amount'], $order->total_amount);
+    }
+
+    // 添加其他测试用例，例如测试关联关系、查询方法等
+}
+```
+
+4. Payment模型的单元测试（PaymentTest.php）：
+
+```php
+use Tests\TestCase;
+use App\Models\Payment;
+
+class PaymentTest extends TestCase
+{
+    public function testPaymentCreation()
+    {
+        $paymentData = [
+            'order_id' => 1,
+            'amount' => 49.99,
+        ];
+
+        $payment = Payment::create($paymentData);
+
+        $this->assertInstanceOf(Payment::class, $payment);
+        $this->assertEquals($paymentData['order_id'], $payment->order_id);
+        $this->assertEquals($paymentData['amount'], $payment->amount);
+    }
+
+    // 添加其他测试用例，例如测试关联关系、查询方法等
+}
+```
+
+以上示例中，我们为每个模型分别创建了一个单元测试类，并编写了相关的测试用例。你可以根据实际情况添加更多测试用例，并使用PHPUnit来运行这些测试：
+
+```bash
+vendor/bin/phpunit
+```
+
+希望这能帮助你为各个模型生成相应的单元测试！
+
+当优化模型和测试时，可以采用一些最佳实践，以提高代码质量和可维护性。以下是针对模型和测试的一些建议：
+
+模型优化建议：
+
+1. 使用批量赋值保护（Mass Assignment Protection）：在模型中使用`$fillable`属性来定义可以批量赋值的字段，同时使用`$guarded`属性来定义受保护的字段，以增加数据安全性。
+
+```php
+protected $fillable = ['name', 'description', 'price'];
+```
+
+2. 定义关联关系：在模型中明确定义各个关联关系，以便更清晰地表示模型之间的关系，并使用延迟加载（lazy loading）或预加载（eager loading）来优化关联关系的性能。
+
+```php
+public function categories()
+{
+    return $this->belongsToMany(Category::class, 'product_category');
+}
+```
+
+3. 使用访问器和修改器：通过访问器（accessor）和修改器（mutator）来封装模型属性的访问和修改，以便在获取和设置属性时进行自定义逻辑处理。
+
+```php
+public function getPriceAttribute($value)
+{
+    return number_format($value, 2);
+}
+
+public function setPriceAttribute($value)
+{
+    $this->attributes['price'] = round($value, 2);
+}
+```
+
+测试优化建议：
+
+1. 利用数据工厂（Data Factories）：使用数据工厂来创建测试数据，以便在测试中快速生成和使用模拟数据，提高测试效率和可维护性。
+
+```php
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use App\Models\Product;
+use Database\Factories\ProductFactory;
+
+class ProductTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function testProductCreation()
+    {
+        $product = Product::factory()->create();
+
+        $this->assertInstanceOf(Product::class, $product);
+        // 进行其他断言
+    }
+
+    // 其他测试用例
+}
+```
+
+2. 利用数据迁移（Migrations）：在测试开始前进行数据库迁移，以便在每次运行测试时创建干净的数据库结构，确保测试的独立性。
+
+```php
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use App\Models\Product;
+use Database\Factories\ProductFactory;
+
+class ProductTest extends TestCase
+{
+    use RefreshDatabase;
+
+    // 测试方法
+}
+```
+
+3. 使用断言链式调用：使用PHPUnit提供的断言链式调用来编写简洁、清晰的断言，提高测试代码的可读性。
+
+```php
+public function testProductCreation()
+{
+    $productData = [
+        'name' => 'Test Product',
+        'description' => 'This is a test product',
+        'price' => 9.99,
+    ];
+
+    $product = Product::create($productData);
+
+    $this->assertInstanceOf(Product::class, $product)
+         ->assertEquals($productData['name'], $product->name)
+         ->assertEquals($productData['description'], $product->description)
+         ->assertEquals($productData['price'], $product->price);
+}
+```
+
+4.
+
+ 使用数据提供器（Data Providers）：使用数据提供器来提供不同的测试数据集，以覆盖更多的测试场景，增加测试的全面性和可靠性。
+
+```php
+public function productData()
+{
+    return [
+        ['Test Product 1', 'Description 1', 9.99],
+        ['Test Product 2', 'Description 2', 19.99],
+        // 更多测试数据
+    ];
+}
+
+/**
+ * @dataProvider productData
+ */
+public function testProductCreation($name, $description, $price)
+{
+    $productData = [
+        'name' => $name,
+        'description' => $description,
+        'price' => $price,
+    ];
+
+    $product = Product::create($productData);
+
+    $this->assertInstanceOf(Product::class, $product)
+         ->assertEquals($productData['name'], $product->name)
+         ->assertEquals($productData['description'], $product->description)
+         ->assertEquals($productData['price'], $product->price);
+}
+```
+
+通过应用上述优化建议，你可以改进模型和测试的质量、可维护性和可读性。记住在运行测试之前，要确保已进行数据迁移以及使用数据工厂来创建模拟数据。
+
+希望这些优化建议对你有所帮助！
+
+当使用Laravel生成数据库迁移时，如果存在需要使用的中间表（pivot table），可以使用Laravel提供的`create()`方法并传递`--pivot`选项来创建该表。以下是一个使用Laravel生成pivot表的示例：
+
+```bash
+php artisan make:migration create_product_category_pivot_table --create=product_category
+```
+
+上述命令将创建一个名为`create_product_category_pivot_table`的迁移文件，并创建名为`product_category`的pivot表格。
+
+在生成的迁移文件中，你可以根据需要定义pivot表的字段。例如，假设你希望在`product_category`表中存储产品ID和类别ID，你可以编写类似以下的迁移文件内容：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateProductCategoryPivotTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('product_category', function (Blueprint $table) {
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('category_id');
+            
+            // 可以添加其他需要的字段
+            
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            
+            // 添加其他索引或约束
+            
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('product_category');
+    }
+}
+```
+
+在上述示例中，我们创建了一个包含`product_id`和`category_id`字段的pivot表，并为它们定义了外键关系。你可以根据实际需求在pivot表中添加其他字段、索引或约束。
+
+生成迁移文件后，运行数据库迁移命令即可创建pivot表：
+
+```bash
+php artisan migrate
+```
+
+完成以上步骤后，你将拥有一个名为`product_category`的pivot表，用于在产品和类别之间建立多对多的关联关系。
+
+希望这能帮助到你！
+
+如果订单和产品之间存在多对多的关联关系，那么可以使用Laravel的pivot表来表示该关系。以下是使用Laravel生成订单和产品之间的pivot表的示例：
+
+1. 首先，确保你已经定义了订单（Order）模型和产品（Product）模型，并在模型之间建立了多对多的关联关系。
+
+2. 使用Laravel的`make:migration`命令生成创建pivot表的迁移文件。在迁移文件名中，可以按照惯例使用两个相关模型的名称，按字母顺序排序，并用下划线连接。例如，假设订单和产品之间的pivot表的名称为`order_product`，则可以运行以下命令生成迁移文件：
+
+```bash
+php artisan make:migration create_order_product_table --create=order_product
+```
+
+上述命令将生成名为`create_order_product_table`的迁移文件，并创建名为`order_product`的pivot表。
+
+3. 在生成的迁移文件中，定义pivot表的字段，并设置外键关系：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateOrderProductTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('order_product', function (Blueprint $table) {
+            $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('product_id');
+
+            // 可以添加其他需要的字段
+
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
+            // 添加其他索引或约束
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('order_product');
+    }
+}
+```
+
+在上述示例中，我们创建了一个名为`order_product`的pivot表，包含`order_id`和`product_id`两个字段，并为它们设置了外键关系。
+
+4. 运行数据库迁移命令以创建pivot表：
+
+```bash
+php artisan migrate
+```
+
+完成以上步骤后，你将拥有一个名为`order_product`的pivot表，用于表示订单和产品之间的多对多关联关系。
+
+请注意，生成的pivot表只包含用于建立关联关系的外键字段。如果你还需要在pivot表中存储其他数据，例如数量、价格等，你可以根据需求在迁移文件中添加相应的字段。
+
+希望这能帮助到你！
+
+根据你提供的信息，我将为你提供一个更详细的数据库表格之间关系的文本描述：
+
+```
+订单 (Order)
+----------------
+- id: integer (主键)
+- order_number: string
+- created_at: timestamp
+- updated_at: timestamp
+
+产品 (Product)
+----------------
+- id: integer (主键)
+- name: string
+- description: string
+- price: decimal
+- created_at: timestamp
+- updated_at: timestamp
+
+种类 (Category)
+----------------
+- id: integer (主键)
+- name: string
+- created_at: timestamp
+- updated_at: timestamp
+
+订单-产品 (Order-Product) [Pivot]
+----------------
+- order_id: integer (外键，参考订单表的id)
+- product_id: integer (外键，参考产品表的id)
+- quantity: integer (可选，存储产品数量等其他相关信息)
+- created_at: timestamp
+- updated_at: timestamp
+
+产品-种类 (Product-Category) [Pivot]
+----------------
+- product_id: integer (外键，参考产品表的id)
+- category_id: integer (外键，参考种类表的id)
+- created_at: timestamp
+- updated_at: timestamp
+```
+
+根据上述描述，我们可以得到以下表格之间的关系：
+
+- 订单（Order）与产品（Product）之间是多对多关系，通过订单-产品（Order-Product）pivot表建立关联。
+- 产品（Product）与种类（Category）之间也是多对多关系，通过产品-种类（Product-Category）pivot表建立关联。
+
+请注意，上述描述中的pivot表除了包含外键字段之外，还可以根据需要添加其他字段，如数量、创建时间和更新时间等。
+
+希望这个详细的描述对你有所帮助！如果有任何进一步的问题，请随时提问。
+
+作为一个电商平台，除了订单（Order）、产品（Product）、种类（Category）和相关的关联表之外，以下是一些额外的表格和内容信息，可以考虑添加到你的数据结构中以更符合现实中的应用：
+
+1. 用户（User）：
+
+- id: integer (主键)
+- name: string (用户姓名)
+- email: string (用户电子邮件)
+- password: string (用户密码)
+- address: string (用户地址)
+- phone: string (用户电话)
+- created_at: timestamp
+- updated_at: timestamp
+
+2. 购物车（Cart）：
+
+- id: integer (主键)
+- user_id: integer (外键，参考用户表的id)
+- created_at: timestamp
+- updated_at: timestamp
+
+3. 收货地址（Shipping Address）：
+
+- id: integer (主键)
+- user_id: integer (外键，参考用户表的id)
+- address: string (收货地址)
+- city: string (城市)
+- state: string (州/省)
+- country: string (国家)
+- postal_code: string (邮政编码)
+- created_at: timestamp
+- updated_at: timestamp
+
+4. 评价（Review）：
+
+- id: integer (主键)
+- user_id: integer (外键，参考用户表的id)
+- product_id: integer (外键，参考产品表的id)
+- rating: integer (评分)
+- comment: string (评论内容)
+- created_at: timestamp
+- updated_at: timestamp
+
+5. 支付方式（Payment Method）：
+
+- id: integer (主键)
+- user_id: integer (外键，参考用户表的id)
+- name: string (支付方式名称)
+- card_number: string (卡号)
+- expiration_date: string (有效期)
+- created_at: timestamp
+- updated_at: timestamp
+
+6. 订单状态（Order Status）：
+
+- id: integer (主键)
+- name: string (状态名称，如"待支付"、"已支付"、"已发货"等)
+- created_at: timestamp
+- updated_at: timestamp
+
+7. 优惠券（Coupon）：
+
+- id: integer (主键)
+- code: string (优惠券代码)
+- discount: decimal (折扣金额或折扣率)
+- expiration_date: date (过期日期)
+- created_at: timestamp
+- updated_at: timestamp
+
+上述表格提供了一些常见的实体和与之相关的信息，可以丰富你的电商平台数据结构。当然，实际应用中可能还会根据具体需求添加更多的表格和字段。
+
+请记得在设计和实现时考虑数据的一致性、完整性和安全性，并确保根据具体的业务逻辑建立正确的关联关系和约束条件。
+
+希望这些信息对你有所帮助！如有任何进一步的问题，请随时提问。
+
+当然，我可以为你生成其他表格的数据库迁移和模型。以下是根据你的要求生成的其他表格的示例：
+
+1. 生成用户（User）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_users_table --create=users
+php artisan make:model User
+```
+
+在生成的迁移文件中，定义用户表的字段：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateUsersTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            // 添加其他字段
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+}
+```
+
+在生成的用户模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class User extends Model
+{
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function shippingAddresses()
+    {
+        return $this->hasMany(ShippingAddress::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+}
+```
+
+2. 生成购物车（Cart）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_carts_table --create=carts
+php artisan make:model Cart
+```
+
+在生成的迁移文件中，定义购物车表的字段和外键关系：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateCartsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('carts', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('carts');
+    }
+}
+```
+
+在生成的购物车模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Cart extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'cart_product')->withPivot('quantity');
+    }
+}
+```
+
+3. 生成收货地址（Shipping Address）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_shipping_addresses_table --create=shipping_addresses
+php artisan make:model ShippingAddress
+```
+
+在生成的迁移文件中，定义收货地址表的字段和外键关系：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateShippingAddressesTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('shipping_addresses', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $
+
+table->string('address');
+            $table->string('city');
+            $table->string('state');
+            $table->string('country');
+            $table->string('postal_code');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('shipping_addresses');
+    }
+}
+```
+
+在生成的收货地址模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class ShippingAddress extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+4. 生成评价（Review）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_reviews_table --create=reviews
+php artisan make:model Review
+```
+
+在生成的迁移文件中，定义评价表的字段和外键关系：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateReviewsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('reviews', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
+            $table->integer('rating');
+            $table->string('comment')->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('reviews');
+    }
+}
+```
+
+在生成的评价模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Review extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+}
+```
+
+5. 生成支付方式（Payment Method）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_payment_methods_table --create=payment_methods
+php artisan make:model PaymentMethod
+```
+
+在生成的迁移文件中，定义支付方式表的字段和外键关系：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreatePaymentMethodsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('payment_methods', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->string('name');
+            $table->string('card_number');
+            $table->string('expiration_date');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('payment_methods');
+    }
+}
+```
+
+在生成的支付方式模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class PaymentMethod extends Model
+{
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+6. 生成订单状态（Order Status）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_order_statuses_table --create=order_statuses
+php artisan make:model Order
+
+Status
+```
+
+在生成的迁移文件中，定义订单状态表的字段：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateOrderStatusesTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('order_statuses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            // 添加其他字段
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('order_statuses');
+    }
+}
+```
+
+在生成的订单状态模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class OrderStatus extends Model
+{
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+}
+```
+
+7. 生成优惠券（Coupon）表的数据库迁移和模型：
+
+```bash
+php artisan make:migration create_coupons_table --create=coupons
+php artisan make:model Coupon
+```
+
+在生成的迁移文件中，定义优惠券表的字段：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateCouponsTable extends Migration
+{
+    public function up()
+    {
+        Schema::create('coupons', function (Blueprint $table) {
+            $table->id();
+            $table->string('code');
+            $table->decimal('discount', 8, 2);
+            // 添加其他字段
+
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('coupons');
+    }
+}
+```
+
+在生成的优惠券模型中，定义与其他模型的关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Coupon extends Model
+{
+    // 添加优惠券相关的关联关系
+}
+```
+
+以上是根据你的要求生成的表格的数据库迁移和模型示例。请确保在运行迁移之前先保存好原有的迁移文件，然后运行`php artisan migrate`命令以执行数据库迁移。
+
+希望这能满足你的需求！如果有任何进一步的问题，请随时提问。
