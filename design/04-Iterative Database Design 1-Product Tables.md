@@ -1,3 +1,101 @@
+好的，以下是重新生成 `products` 表的迁移文件和修改点：
+
+1. 生成 `products` 表的迁移文件：
+你可以运行以下命令生成 `products` 表的迁移文件：
+
+```bash
+php artisan make:migration create_products_table --create=products
+```
+
+这将生成一个名为 `2023_05_18_000000_create_products_table.php` 的迁移文件。请将下面的代码复制到生成的迁移文件中：
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateProductsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->text('description');
+            $table->decimal('price', 10, 2);
+            $table->integer('quantity');
+            $table->string('image')->nullable();
+            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_active')->default(true);
+            $table->string('meta_title')->nullable();
+            $table->text('meta_description')->nullable();
+            $table->string('slug')->unique();
+            $table->string('featured_image')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('products');
+    }
+}
+```
+
+2. 修改 `Product` 模型：
+在 `Product` 模型中添加以下属性和关联关系：
+
+```php
+use Illuminate\Database\Eloquent\Model;
+
+class Product extends Model
+{
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'quantity',
+        'image',
+        'is_featured',
+        'is_active',
+        'meta_title',
+        'meta_description',
+        'slug',
+        'featured_image',
+    ];
+    
+    // 添加关联关系
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class)->withPivot('quantity', 'price');
+    }
+    
+    // 其他方法...
+}
+```
+
+这样，我们就在 `products` 表中添加了相应的列，并在 `Product` 模型中定义了这些列和相应的关联关系。请记得运行 `php artisan migrate` 命令来创建 `products` 表。
+
 非常抱歉，我之前的回答有误。我将为你提供正确的方法来重新生成包含所有新添加的列和软删除功能的 `products` 表格。
 
 首先，使用以下命令生成 `products` 表格的迁移文件：
