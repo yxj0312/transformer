@@ -1,16 +1,14 @@
-<?php
+当然，请允许我为迁移文件和模型添加英文注释：
 
+**Migration file (CreateProductsTable):**
+
+```php
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateProductsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
@@ -32,13 +30,55 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('products');
     }
-};
+}
+```
+
+**Product Model (Product.php):**
+
+```php
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Product extends Model
+{
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = [
+        'brand_id',
+        'category_id',
+        'description',
+        'price',
+        'quantity',
+        'image',
+        'is_featured',
+        'is_active',
+        'meta_title',
+        'meta_description',
+        'slug',
+        'featured_image',
+    ];
+
+    /**
+     * Get the brand associated with the product.
+     */
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    /**
+     * Get the category associated with the product.
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+}
+```
+
+These comments will help you understand the meaning of each field and the relationships in the model more clearly.

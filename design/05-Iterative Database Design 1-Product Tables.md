@@ -26,15 +26,24 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            // 用于描述产品的详细信息
             $table->text('description');
+            // 产品的价格
             $table->decimal('price', 10, 2);
+            // 产品的库存数量
             $table->integer('quantity');
             $table->string('image')->nullable();
+            // 用于标记产品是否为特色产品或推荐产品。
             $table->boolean('is_featured')->default(false);
+            // 用于标记产品是否处于活动状态
             $table->boolean('is_active')->default(true);
+            // 用于搜索引擎优化（SEO）的产品标题
             $table->string('meta_title')->nullable();
+            // 用于SEO的产品描述
             $table->text('meta_description')->nullable();
+            // 产品的URL友好版本，用于SEO和路由
             $table->string('slug')->unique();
+            //  用于标记产品的主要展示图片
             $table->string('featured_image')->nullable();
             $table->timestamps();
         });
