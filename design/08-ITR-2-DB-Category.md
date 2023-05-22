@@ -30,7 +30,7 @@ class CreateCategoriesTable extends Migration
             $table->timestamps(); // The timestamps for created and updated dates
             $table->softDeletes(); // The soft delete column for deleted categories
 
-            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->constrained('categories');
         });
     }
 

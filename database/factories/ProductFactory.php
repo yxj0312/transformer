@@ -19,20 +19,27 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            'name' => ucwords($this->faker->words(4, true)),
+            'name' => $this->faker->word,
+            'description' => $this->faker->sentence,
+            'price' => $this->faker->randomFloat(2, 1, 100),
+            'quantity' => $this->faker->randomNumber(),
+            'image' => $this->faker->imageUrl,
+            'is_featured' => $this->faker->boolean,
+            'is_active' => true,
+            'meta_title' => $this->faker->sentence,
+            'meta_description' => $this->faker->paragraph,
             'slug' => $this->faker->slug,
-            'description' => $this->faker->paragraph(5),
-            'price' => $this->faker->randomFloat(2, 20, 1000),
-            'image' => 'products/dummy/laptop-1.jpg',
-            'quantity' => 10,
+            'featured_image' => $this->faker->imageUrl,
+            'brand_id' => Brand::factory(),
+            'category_id' => Category::factory(),
         ];
     }
 
-    public function configure()
-    {
-        return $this->afterCreating(function (Product $product) {
-            $product->categories()
-                ->attach(Category::inRandomOrder()->take(random_int(1, 5))->pluck('id'));
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (Product $product) {
+    //         $product->categories()
+    //             ->attach(Category::inRandomOrder()->take(random_int(1, 5))->pluck('id'));
+    //     });
+    // }
 }

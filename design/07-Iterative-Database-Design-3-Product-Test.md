@@ -270,3 +270,48 @@ class ProductController extends Controller
 通过使用请求验证类，你可以将验证逻辑从模型中分离出来，确保只有经过验证的数据才会被传递给模型进行创建或更新操作。同时，你可以编写单独的测试来测试请求验证类，确保验证规则按预期工作。
 
 请注意，如果你想在单元测试中直接测试验证规则，可以使用 `Validator` 类，如我之前提到的示例。但在实际应用中，最佳实践是将验证规则放在请求验证类中。
+
+以下是使用 Laravel 9 为 Product 模型生成的 ProductFactory：
+
+```php
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Brand;
+
+class ProductFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Product::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->word,
+            'description' => $this->faker->sentence,
+            'price' => $this->faker->randomFloat(2, 1, 100),
+            'quantity' => $this->faker->randomNumber(),
+            'image' => $this->faker->imageUrl,
+            'is_featured' => $this->faker->boolean,
+            'is_active' => true,
+            'meta_title' => $this->faker->sentence,
+            'meta_description' => $this->faker->paragraph,
+            'slug' => $this->faker->slug,
+            'featured_image' => $this->faker->imageUrl,
+            'brand_id' => Brand::factory(),
+            'category_id' => Category::factory(),
+        ];
+    }
+}
+```
+
+这个 ProductFactory 可以用于生成 Product 模型的假数据。它使用 Faker 库来生成随机的名称、描述、价格、库存数量等属性，并提供了一些默认值。同时，它使用了 BrandFactory 和 CategoryFactory 来生成对应的关联数据。可以根据需要进行修改或添加其他属性。
