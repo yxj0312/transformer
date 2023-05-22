@@ -17,8 +17,15 @@ class CategoryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => ucwords($this->faker->words(4, true)),
+            'name' => $this->faker->word,
             'slug' => $this->faker->slug,
+            'description' => $this->faker->sentence,
+            'image' => $this->faker->imageUrl,
+            'parent_id' => null,
+            'is_active' => true,
+            'meta_title' => $this->faker->sentence,
+            'meta_description' => $this->faker->paragraph,
+            'order' => $this->faker->randomNumber,
         ];
     }
 }
