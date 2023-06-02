@@ -83,7 +83,24 @@ class BrandTest extends TestCase
 
     public function test_can_create_brand()
     {
-        // Test brand creation
+        $brandData = [
+            'name' => 'Example Brand',
+            'slug' => 'example-brand',
+            'description' => 'This is an example brand',
+            'logo' => 'example-logo.png',
+            'is_active' => true,
+            'country' => 'United States',
+            'founded_year' => 1990,
+            'email' => 'example@example.com',
+            'phone' => '1234567890',
+            'website' => 'https://example.com',
+            // Add other fields as necessary
+        ];
+
+        $brand = Brand::factory()->create($brandData);
+
+        $this->assertInstanceOf(Brand::class, $brand);
+        $this->assertDatabaseHas('brands', $brandData);
     }
 
     public function test_can_update_brand()
