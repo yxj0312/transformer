@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Brand;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class BrandTest extends TestCase
 {

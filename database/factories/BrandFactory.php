@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Brand;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Faker\Factory as Faker;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>
@@ -16,17 +18,19 @@ class BrandFactory extends Factory
      */
     public function definition()
     {
+        $faker = Faker::create();
+
         return [
-            'name' => $this->faker->company,
-            'slug' => $this->faker->slug,
-            'description' => $this->faker->paragraph,
-            'logo' => $this->faker->imageUrl(),
-            'is_active' => $this->faker->boolean,
-            'country' => $this->faker->country,
-            'founded_year' => $this->faker->numberBetween(1900, 2023),
-            'email' => $this->faker->email,
-            'phone' => $this->faker->phoneNumber,
-            'website' => $this->faker->url,
+            'name' => $faker->company,
+            'slug' => $faker->slug,
+            'description' => $faker->paragraph,
+            'logo' => $faker->imageUrl(),
+            'is_active' => $faker->boolean,
+            'country' => $faker->country,
+            'founded_year' => $faker->numberBetween(1900, 2023),
+            'email' => $faker->email,
+            'phone' => $faker->phoneNumber,
+            'website' => $faker->url,
         ];
     }
 }
