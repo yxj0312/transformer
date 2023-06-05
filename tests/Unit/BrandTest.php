@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -55,7 +56,7 @@ class BrandTest extends TestCase
 
         $brand->delete();
 
-        $this->assertDeleted($brand);
+        $this->assertDatabaseMissing('brands', ['id' => $brand->id]);
     }
 
     public function test_brand_has_products_relationship()
