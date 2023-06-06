@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('brand_id')->constrained('brands'); // Foreign key for brand, referencing the brands table
-            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade'); // Foreign key for category, referencing the categories table with cascade deletion enabled
+            $table->foreignId('category_id')->constrained('categories'); // Foreign key for category, referencing the categories table with cascade deletion enabled
             $table->string('name'); // Product name
             $table->string('description'); // Description
             $table->decimal('price', 8, 2); // Price with 2 decimal places

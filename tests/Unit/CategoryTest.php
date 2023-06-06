@@ -3,8 +3,9 @@
 namespace Tests\Unit;
 
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class CategoryTest extends TestCase
 {
@@ -125,9 +126,7 @@ class CategoryTest extends TestCase
         $children = $parentCategory->children;
 
         // Assert the child categories are correct
-        $this->assertCount
-
-(2, $children);
+        $this->assertCount(2, $children);
         $this->assertEquals($childCategory1->id, $children[0]->id);
         $this->assertEquals($childCategory2->id, $children[1]->id);
     }
@@ -140,24 +139,31 @@ class CategoryTest extends TestCase
     public function testRetrieveCategoryProducts()
     {
         // Create a category
-        $category = Category::factory()->create();
+    $category = Category::factory()->create();
 
-        // Create products under the category
-        $product1 = $category->products()->create([
-            'name' => 'Product 1',
-            'price' => 10.99,
-        ]);
-        $product2 = $category->products()->create([
-            'name' => 'Product 2',
-            'price' => 19.99,
-        ]);
+    // Create products using the ProductFactory
+    $product1 = Product::factory()->create([
+        'category_id' => $category->id,
+        'name' => 'Product 1',
+        'description' => 'Product 1 description',
+        'price' => 10.99,
+    ]);
 
-        // Retrieve the products under the category
-        $products = $category->products;
+    $product2 = Product::factory()->create([
+        'category_id' => $category->id,
+        'name' => 'Product 2',
+        'description' => 'Product 2 description',
+        'price' => 19.99,
+    ]);
 
-        // Assert the products are correct
-        $this->assertCount(2, $products);
-        $this->assertEquals($product1->id, $products[0]->id);
-        $this->assertEquals($product2->id, $products[1]->id);
+    // Retrieve the products under the category
+    $products = $category->products;
+
+    // Assert the products are correct
+    $this->assertCount(2, $products);
+    $this->assertEquals($product1->id, $products[0]->id);
+    $this->assertEquals($product2->id, $products[1]->id);
+    $this->assertEquals('Product 1 description', $products[0]->description);
+    $this->assertEquals('Product 2 description', $products[1]->description);
     }
 }
