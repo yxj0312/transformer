@@ -50,14 +50,15 @@ class BrandTest extends TestCase
         // Add more assertions for updated fields
     }
 
-    public function test_can_delete_brand()
+    public function test_can_soft_delete_brand()
     {
         $brand = Brand::factory()->create();
 
         $brand->delete();
 
-        $this->assertDatabaseMissing('brands', ['id' => $brand->id]);
+        $this->assertSoftDeleted('brands', ['id' => $brand->id]);
     }
+
 
     public function test_brand_has_products_relationship()
     {
