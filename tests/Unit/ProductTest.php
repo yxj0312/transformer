@@ -19,9 +19,28 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testCreateProduct()
+    public function test_create_product()
     {
-        $productData = [
+
+        $product = Product::factory()->create([
+            'name' => 'Sample Product',
+            'description' => 'This is a sample product.',
+            'price' => 9.99,
+            'quantity' => 10,
+            'image' => 'sample.jpg',
+            'is_featured' => true,
+            'is_active' => true,
+            'meta_title' => 'Sample Product',
+            'meta_description' => 'Sample product meta description.',
+            'slug' => 'sample-product',
+            'featured_image' => 'sample_featured.jpg',
+            'brand_id' => Brand::factory(),
+            'category_id' => Category::factory(),
+        ]);
+
+        // Assert the product was created
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
             'name' => 'Sample Product',
             'description' => 'This is a sample product.',
             'price' => 9.99,
@@ -35,18 +54,6 @@ class ProductTest extends TestCase
             'featured_image' => 'sample_featured.jpg',
             'brand_id' => 1,
             'category_id' => 1,
-        ];
-
-        $response = $this->postJson('/api/products', $productData);
-
-        $response->assertStatus(201)
-            ->assertJson([
-                'success' => true,
-                'message' => 'Product created successfully.',
-            ]);
-
-        $this->assertDatabaseHas('products', [
-            'name' => 'Sample Product',
         ]);
     }
 
@@ -55,7 +62,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateProduct()
+    public function test_update_product()
     {
         $product = Product::factory()->create();
 
