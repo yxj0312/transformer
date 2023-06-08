@@ -11,6 +11,7 @@ class Product extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'name',
         'brand_id',
         'category_id',
         'description',
@@ -23,6 +24,11 @@ class Product extends Model
         'meta_description',
         'slug',
         'featured_image',
+    ];
+
+    protected $casts = [
+        'is_featured' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     /**
