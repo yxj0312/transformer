@@ -16,7 +16,7 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testCreateCategory()
+    public function test_create_category()
     {
         // Create a new category
         $category = Category::factory()->create([
@@ -49,7 +49,7 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testUpdateCategory()
+    public function test_update_category()
     {
         // Create a category
         $category = Category::factory()->create();
@@ -70,7 +70,7 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteCategory()
+    public function test_delete_category()
     {
         // Create a category
         $category = Category::factory()->create();
@@ -87,7 +87,7 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testRetrieveParentCategory()
+    public function test_retrieve_parent_category()
     {
         // Create a parent category
         $parentCategory = Category::factory()->create();
@@ -109,7 +109,7 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testRetrieveChildCategories()
+    public function test_retrieve_child_categories()
     {
         // Create a parent category
         $parentCategory = Category::factory()->create();
@@ -136,7 +136,7 @@ class CategoryTest extends TestCase
      *
      * @return void
      */
-    public function testRetrieveCategoryProducts()
+    public function test_retrieve_category_products()
     {
         // Create a category
     $category = Category::factory()->create();

@@ -100,7 +100,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testDeleteProduct()
+    public function test_delete_product()
     {
         $product = Product::factory()->create();
 
@@ -122,7 +122,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testProductBrandRelationship()
+    public function test_product_brand_relationship()
     {
         // 创建一个品牌
         $brand = Brand::factory()->create();
@@ -142,7 +142,7 @@ class ProductTest extends TestCase
      *
      * @return void
      */
-    public function testProductCategoryRelationship()
+    public function test_product_category_relationship()
     {
         // 创建一个分类
         $category = Category::factory()->create();
