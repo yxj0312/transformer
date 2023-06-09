@@ -61,3 +61,68 @@ class Review extends Model
 ```
 
 Now, your `Review` model is equipped with soft deletes. You can use the `$review->delete()` method to soft delete a record and use the `$review->restore()` method to restore a soft-deleted record.
+
+Certainly! Here's the updated test and factory for the `Review` model:
+
+1. Factory:
+Create a new factory file for the `Review` model using the `ReviewFactory` class:
+
+```php
+use App\Models\Review;
+use App\Models\Product;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class ReviewFactory extends Factory
+{
+    protected $model = Review::class;
+
+    public function definition()
+    {
+        return [
+            'product_id' => Product::factory(),
+            'user_id' => User::factory(),
+            'content' => $this->faker->paragraph,
+            'rating' => $this->faker->numberBetween(1, 5),
+            'likes_count' => 0,
+            'dislikes_count' => 0,
+            'helpful_count' => 0,
+            'reported_count' => 0,
+        ];
+    }
+}
+```
+
+2. Test:
+Create a new test file for the `Review` model using the `ReviewTest` class:
+
+```php
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+use App\Models\Review;
+
+class ReviewTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_review_belongs_to_product()
+    {
+        $product = Product::factory()->create();
+        $review = Review::factory()->create(['product_id' => $product->id]);
+
+        $this->assertInstanceOf(Product::class, $review->product);
+        $this->assertEquals($product->id, $review->product->id);
+    }
+
+    public function test_review_belongs_to_user()
+    {
+        $user = User::factory()->create();
+        $review = Review::factory()->create(['user_id' => $user->id]);
+
+        $this->assertInstanceOf(User::class, $review->user);
+        $this->assertEquals($user->id, $review->user->id);
+    }
+}
+```
+
+These updated test and factory files will allow you to test the relationships of the `Review` model with the `Product` and `User` models, as well as generate sample reviews with the necessary attributes.
