@@ -17,18 +17,16 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-        $faker = Faker::create();
-
         return [
-            'name' => $faker->word,
-            'slug' => $faker->slug,
-            'description' => $faker->sentence,
-            'image' => $faker->imageUrl,
+            'name' => $this->faker->word,
+            'slug' => $this->faker->slug,
+            'description' => $this->faker->sentence,
+            'image' => $this->faker->imageUrl,
             'parent_id' => null,
             'is_active' => true,
-            'meta_title' => $faker->sentence,
-            'meta_description' => $faker->paragraph,
-            'order' => $faker->randomNumber,
+            'meta_title' => $this->faker->sentence,
+            'meta_description' => $this->faker->paragraph,
+            'order' => $this->faker->randomNumber,
         ];
     }
 }

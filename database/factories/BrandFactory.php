@@ -18,19 +18,19 @@ class BrandFactory extends Factory
      */
     public function definition()
     {
-        $faker = Faker::create();
+        // $faker = Faker::create();
 
         return [
-            'name' => $faker->company,
-            'slug' => $faker->slug,
-            'description' => $faker->paragraph,
-            'logo' => $faker->imageUrl(),
-            'is_active' => $faker->boolean,
-            'country' => $faker->country,
-            'founded_year' => $faker->numberBetween(1900, 2023),
-            'email' => $faker->email,
-            'phone' => $faker->phoneNumber,
-            'website' => $faker->url,
+            'name' => $this->faker->company,
+            'slug' => $this->faker->slug,
+            'description' => $this->faker->paragraph,
+            'logo' => $this->faker->imageUrl(),
+            'is_active' => $this->faker->boolean,
+            'country' => $this->faker->country,
+            'founded_year' => $this->faker->numberBetween(1900, 2023),
+            'email' => $this->faker->email,
+            'phone' => $this->faker->phoneNumber,
+            'website' => $this->faker->url,
         ];
     }
 }
