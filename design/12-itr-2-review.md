@@ -127,31 +127,9 @@ class ReviewTest extends TestCase
 
 These updated test and factory files will allow you to test the relationships of the `Review` model with the `Product` and `User` models, as well as generate sample reviews with the necessary attributes.
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Review;
+Certainly! Here's an updated version of the `ReviewTest` class with additional tests for creating, updating, and deleting reviews:
 
-class ReviewFactory extends Factory
-{
-    protected $model = Review::class;
-
-    public function definition()
-    {
-        return [
-            'content' => $this->faker->paragraph,
-            'rating' => $this->faker->numberBetween(1, 5),
-            'product_id' => function () {
-                return \App\Models\Product::factory()->create()->id;
-            },
-            'user_id' => function () {
-                return \App\Models\User::factory()->create()->id;
-            },
-            'likes_count' => 0,
-            'dislikes_count' => 0,
-            'helpful_count' => 0,
-            'reported_count' => 0,
-        ];
-    }
-}
+```php
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Review;
@@ -221,3 +199,38 @@ class ReviewTest extends TestCase
         $this->assertSoftDeleted('reviews', ['id' => $review->id]);
     }
 }
+```
+
+These additional tests will cover creating a review, updating its content and rating, and deleting a review using the `create()`, `update()`, and `delete()` methods respectively.
+
+Certainly! Here's the updated version of the `ReviewFactory` class to generate review instances with the required attributes:
+
+```php
+use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Review;
+
+class ReviewFactory extends Factory
+{
+    protected $model = Review::class;
+
+    public function definition()
+    {
+        return [
+            'content' => $this->faker->paragraph,
+            'rating' => $this->faker->numberBetween(1, 5),
+            'product_id' => function () {
+                return \App\Models\Product::factory()->create()->id;
+            },
+            'user_id' => function () {
+                return \App\Models\User::factory()->create()->id;
+            },
+            'likes_count' => 0,
+            'dislikes_count' => 0,
+            'helpful_count' => 0,
+            'reported_count' => 0,
+        ];
+    }
+}
+```
+
+You can use this `ReviewFactory` class to generate realistic review instances with the specified attributes and their default values.
