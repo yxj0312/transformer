@@ -14,12 +14,9 @@ class ReviewTest extends TestCase
 
     public function test_create_review()
     {
-        $user = User::factory()->create();
-        $product = Product::factory()->create();
-
         $review = Review::create([
-            'product_id' => $product->id,
-            'user_id' => $user->id,
+            'product_id' => User::factory()->create()->id,
+            'user_id' => Product::factory()->create()->id,
             'content' => 'created review content',
             'rating' => 4,
         ]);

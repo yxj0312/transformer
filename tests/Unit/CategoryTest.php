@@ -19,7 +19,7 @@ class CategoryTest extends TestCase
     public function test_create_category()
     {
         // Create a new category
-        $category = Category::factory()->create([
+        $category = Category::create([
             'name' => 'Test Category',
             'slug' => 'test-category',
             'description' => 'This is a test category',

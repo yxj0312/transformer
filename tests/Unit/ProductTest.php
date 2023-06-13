@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 
@@ -22,7 +23,7 @@ class ProductTest extends TestCase
     public function test_create_product()
     {
 
-        $product = Product::factory()->create([
+        $product = Product::create([
             'name' => 'Sample Product',
             'description' => 'This is a sample product.',
             'price' => 9.99,
@@ -34,8 +35,8 @@ class ProductTest extends TestCase
             'meta_description' => 'Sample product meta description.',
             'slug' => 'sample-product',
             'featured_image' => 'sample_featured.jpg',
-            'brand_id' => Brand::factory(),
-            'category_id' => Category::factory(),
+            'brand_id' => Brand::factory()->create()->id,
+            'category_id' => Category::factory()->create()->id,
         ]);
 
         // Assert the product was created

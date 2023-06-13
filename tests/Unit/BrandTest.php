@@ -24,10 +24,9 @@ class BrandTest extends TestCase
             'email' => 'example@example.com',
             'phone' => '1234567890',
             'website' => 'https://example.com',
-            // Add other fields as necessary
         ];
 
-        $brand = Brand::factory()->create($brandData);
+        $brand = Brand::create($brandData);
 
         $this->assertInstanceOf(Brand::class, $brand);
         $this->assertDatabaseHas('brands', $brandData);
