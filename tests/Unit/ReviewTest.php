@@ -14,7 +14,15 @@ class ReviewTest extends TestCase
 
     public function test_create_review()
     {
-        $review = Review::factory()->create();
+        $user = User::factory()->create();
+        $product = Product::factory()->create();
+
+        $review = Review::create([
+            'product_id' => $product->id,
+            'user_id' => $user->id,
+            'content' => 'created review content',
+            'rating' => 4,
+        ]);
 
         $this->assertInstanceOf(Review::class, $review);
         $this->assertDatabaseHas('reviews', ['id' => $review->id]);

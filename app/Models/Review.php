@@ -10,7 +10,7 @@ class Review extends Model
 {
     use HasFactory, SoftDeletes; // Use the SoftDeletes trait
 
-    protected $fillable = ['content', 'rating'];
+    protected $fillable = ['product_id', 'user_id','content', 'rating'];
 
     public function product()
     {
