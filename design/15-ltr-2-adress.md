@@ -162,3 +162,35 @@ class AddressTest extends TestCase
 ```
 
 请根据您的实际需求添加任何其他测试。
+
+根据上述的迁移，这是生成 Address 的 Factory：
+
+```php
+namespace Database\Factories;
+
+use App\Models\Address;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class AddressFactory extends Factory
+{
+    protected $model = Address::class;
+
+    public function definition()
+    {
+        return [
+            'user_id' => \App\Models\User::factory(),
+            'address' => $this->faker->streetAddress,
+            'city' => $this->faker->city,
+            'state' => $this->faker->stateAbbr,
+            'country' => $this->faker->country,
+            'postal_code' => $this->faker->postcode,
+            'phone_number' => $this->faker->phoneNumber,
+            'company_name' => $this->faker->optional()->company,
+            'apartment_number' => $this->faker->optional()->buildingNumber,
+            'is_default' => false,
+        ];
+    }
+}
+```
+
+请确保在使用此工厂之前，已经定义了 User 模型的工厂。
