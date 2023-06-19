@@ -70,9 +70,10 @@ class AddressTest extends TestCase
     public function test_has_many_carts()
     {
         $address = Address::factory()->create();
-        $cart1 = Cart::factory()->create(['address_id' => $address->id]);
-        $cart2 = Cart::factory()->create(['address_id' => $address->id]);
-
+       
+        $cart1 = Cart::factory()->create(['shipping_address_id' => $address->id]);
+        $cart2 = Cart::factory()->create(['billing_address_id' => $address->id]);
+   
         $this->assertInstanceOf(Cart::class, $address->carts->first());
         $this->assertCount(2, $address->carts);
     }

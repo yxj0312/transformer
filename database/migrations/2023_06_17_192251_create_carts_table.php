@@ -27,6 +27,7 @@ return new class extends Migration
             $table->boolean('is_checked_out')->default(false); // Flag indicating if the cart has been checked out
             $table->timestamp('checked_out_at')->nullable(); // Timestamp of when the cart was checked out
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('shipping_address_id')->references('id')->on('addresses')->onDelete('set null');

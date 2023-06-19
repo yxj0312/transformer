@@ -200,3 +200,48 @@ Schema::create('carts', function (Blueprint $table) {
 With this setup, both the `shipping_address_id` and `billing_address_id` columns in the `carts` table will reference the `id` column in the `addresses` table. You can then establish the appropriate relationships in your models.
 
 Keep in mind that this approach assumes that the shipping and billing addresses have similar attributes and can be stored in the same table. If there are significant differences between the two address types, it may be more appropriate to use separate tables for `shipping_addresses` and `billing_addresses`.
+
+Sure! Here's the Cart model based on the given schema:
+
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Cart extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'shipping_address_id',
+        'billing_address_id',
+        'session_id',
+        'total_items',
+        'total_price',
+        'discount',
+        'coupon_code',
+        'notes',
+        'is_checked_out',
+        'checked_out_at',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo(Address::class, 'shipping_address_id');
+    }
+
+    public function billingAddress()
+    {
+        return $this->belongsTo(Address::class, 'billing_address_id');
+    }
+}
+```
+
+Please ensure that you have the correct namespaces and imports for the User and Address models.
