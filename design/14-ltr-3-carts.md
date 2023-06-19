@@ -271,3 +271,36 @@ id,
 ```
 
 Make sure to run the tests using the appropriate testing command in Laravel, such as `php artisan test` or `vendor/bin/phpunit`.
+
+Certainly! Here's a simplified version of the factory:
+
+```php
+use App\Models\Cart;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class CartFactory extends Factory
+{
+    protected $model = Cart::class;
+
+    public function definition()
+    {
+        return [
+            'user_id' => \App\Models\User::factory(),
+            'shipping_address_id' => null,
+            'billing_address_id' => null,
+            'session_id' => $this->faker->uuid,
+            'total_items' => $this->faker->numberBetween(0, 10),
+            'total_price' => $this->faker->randomFloat(2, 0, 1000),
+            'discount' => $this->faker->randomFloat(2, 0, 100),
+            'coupon_code' => $this->faker->randomNumber(6),
+            'notes' => $this->faker->sentence(),
+            'is_checked_out' => false,
+            'checked_out_at' => null,
+        ];
+    }
+}
+```
+
+In this version, I used the `uuid` method to generate a random session ID instead of the `Str::random` method. Additionally, I directly used the `User` factory for generating the `user_id` value.
+
+Remember to adjust the namespace and imports according to your application's structure.
