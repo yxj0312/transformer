@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Address extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -28,9 +28,14 @@ class Address extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function carts()
+    public function shippingCarts()
     {
-        return $this->hasMany(Cart::class);
+        return $this->hasMany(Cart::class, 'shipping_address_id');
+    }
+
+    public function billingCarts()
+    {
+        return $this->hasMany(Cart::class, 'billing_address_id');
     }
 
     // Add any other relationships or methods here
