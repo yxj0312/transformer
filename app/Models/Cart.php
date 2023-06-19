@@ -39,5 +39,10 @@ class Cart extends Model
         return $this->belongsTo(Address::class, 'billing_address_id');
     }
 
-
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'cart_product')
+            ->withPivot('quantity')
+            ->withTimestamps();
+    }
 }

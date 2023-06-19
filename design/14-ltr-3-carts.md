@@ -304,3 +304,35 @@ class CartFactory extends Factory
 In this version, I used the `uuid` method to generate a random session ID instead of the `Str::random` method. Additionally, I directly used the `User` factory for generating the `user_id` value.
 
 Remember to adjust the namespace and imports according to your application's structure.
+
+非常抱歉，我之前的回答中忽略了`Cart`模型与`Product`之间的关系。以下是更新后的`Cart`模型代码，包含与`Product`的关联关系：
+
+```php
+class Cart extends Model
+{
+    // ...
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'cart_product')
+            ->withPivot('quantity', 'price')
+            ->withTimestamps();
+    }
+}
+```
+
+在这个更新后的`Cart`模型中，我们添加了`products()`方法来定义与`Product`的多对多关联关系。通过`belongsToMany()`方法，我们指定了中间表名称为`cart_product`，并使用`withPivot()`方法指定了中间表中的额外字段。
+
+这样，你就可以通过`$cart->products`访问与`Cart`关联的`Product`集合，并且还可以通过`$product->pivot->quantity`和`$product->pivot->price`访问中间表中的`quantity`和`price`字段。
+
+请注意，你需要根据你的实际数据库结构和表名称进行调整。以上代码仅供参考，你需要根据自己的业务逻辑进行适当的修改。
