@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Address;
 use App\Models\Cart;
 use App\Models\Product;
 use App\Models\User;
@@ -78,11 +79,9 @@ class CartTest extends TestCase
 
         $cart->products()->attach($product1->id, [
             'quantity' => 2,
-            'price' => 10.99,
         ]);
         $cart->products()->attach($product2->id, [
             'quantity' => 1,
-            'price' => 5.99,
         ]);
 
         $this->assertCount(2, $cart->products);
@@ -90,35 +89,21 @@ class CartTest extends TestCase
         $this->assertTrue($cart->products->contains($product2));
     }
 
-    /**
-     * Test accessing the shipping address of a cart.
-     *
-     * @return void
-     */
-    public function test_access_shipping_address_of_cart()
+    public function test_shipping_address_in_cart_belongs_to_address()
     {
-        $cart = Cart::factory()->create();
-        $shippingAddress = ShippingAddress::factory()->create([
-            'cart_id' => $cart->id,
-        ]);
+        $address = Address::factory()->create();
+        $cart = Cart::factory()->create(['shipping_address_id' => $address->id]);
 
-        $this->assertInstanceOf(ShippingAddress::class, $cart->shippingAddress);
-        $this->assertEquals($shippingAddress->id, $cart->shippingAddress->id);
+        $this->assertInstanceOf(Address::class, $cart->shippingAddress);
+        $this->assertEquals($address->id, $cart->shippingAddress->id);
     }
 
-    /**
-     * Test accessing the billing address of a cart.
-     *
-     * @return void
-     */
-    public function test_access_billing_address_of_cart()
+    public function test_billing_address_in_cart_belongs_to_address()
     {
-        $cart = Cart::factory()->create();
-        $billingAddress = Address::factory()->create([
-            'cart_id' => $cart->id,
-        ]);
+        $address = Address::factory()->create();
+        $cart = Cart::factory()->create(['billing_address_id' => $address->id]);
 
         $this->assertInstanceOf(Address::class, $cart->billingAddress);
-        $this->assertEquals($billingAddress->id, $cart->billingAddress->id);
+        $this->assertEquals($address->id, $cart->billingAddress->id);
     }
 }
