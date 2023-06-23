@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained('roles');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletes(); // Soft delete flag
 
             // Additional attributes for online shopping platform
             $table->string('first_name')->nullable();
