@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable(); // A brief description of the role
             $table->boolean('is_default')->default(false); // Whether this role is the default role assigned to new users
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
