@@ -221,7 +221,9 @@ class CreateOrderStatusesTable extends Migration
     {
         Schema::create('order_statuses', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('The name of the order status');
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -237,6 +239,7 @@ class CreateOrderStatusesTable extends Migration
         Schema::dropIfExists('order_statuses');
     }
 }
+
 ```
 
 Model:
@@ -253,16 +256,22 @@ class OrderStatus extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'description',
+        'is_active',
+    ];
 
-    /**
-     * Get the orders with this status.
-     */
+    protected $dates = [
+        'deleted_at',
+    ];
+
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 }
+
 ```
 
 请运行相应的迁移命令来创建表结构。
