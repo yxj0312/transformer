@@ -132,9 +132,7 @@ use Illuminate\Support\Facades\Schema;
 class CreatePaymentMethodsTable extends Migration
 {
     /**
-    
-
- * Run the migrations.
+     * Run the migrations.
      *
      * @return void
      */
@@ -142,7 +140,10 @@ class CreatePaymentMethodsTable extends Migration
     {
         Schema::create('payment_methods', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment('The name of the payment method');
+            $table->string('name');
+            $table->string('description')->nullable();
+            $table->string('gateway')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -158,6 +159,7 @@ class CreatePaymentMethodsTable extends Migration
         Schema::dropIfExists('payment_methods');
     }
 }
+
 ```
 
 Model:
@@ -167,23 +169,32 @@ php artisan make:model PaymentMethod
 ```
 
 ```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PaymentMethod extends Model
 {
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'description',
+        'gateway',
+        'is_active',
+    ];
 
-    /**
-     * Get the orders that use this payment method.
-     */
+    // Relationships
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 }
+
 ```
 
 创建 OrderStatuses 表的迁移和模型：
