@@ -27,13 +27,13 @@ class CreateOrdersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('payment_method_id');
             $table->unsignedBigInteger('order_status_id');
-            $table->decimal('total_amount', 10, 2)->comment('The total amount of the order');
-            $table->string('currency')->comment('The currency of the order');
-            $table->string('payment_status')->comment('The payment status of the order');
-            $table->string('shipping_method')->comment('The shipping method of the order');
-            $table->string('tracking_number')->nullable()->comment('The tracking number of the order');
-            $table->text('shipping_address')->nullable()->comment('The shipping address of the order');
-            $table->text('billing_address')->nullable()->comment('The billing address of the order');
+            $table->decimal('total_amount', 10, 2); // The total amount of the order
+            $table->string('currency'); // The currency of the order
+            $table->string('payment_status'); // The payment status of the order
+            $table->string('shipping_method'); // The shipping method of the order
+            $table->string('tracking_number')->nullable(); // The tracking number of the order
+            $table->text('shipping_address')->nullable(); // The shipping address of the order
+            $table->text('billing_address')->nullable(); // The billing address of the order
             $table->timestamps();
             $table->softDeletes();
 
