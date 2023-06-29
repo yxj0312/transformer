@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\OrderStatus;
+use App\Models\PaymentMethod;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,21 +19,19 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'user_id' => null,
-            'billing_email' => $this->faker->email(),
-            'billing_name' => ucwords($this->faker->words(4, true)),
-            'billing_address' => $this->faker->address(),
-            'billing_city' => $this->faker->city(),
-            'billing_province' => $this->faker->words(4, true),
-            'billing_postalcode' => $this->faker->postcode(),
-            'billing_phone' => $this->faker->phoneNumber(),
-            'billing_name_on_card' => ucwords($this->faker->words(4, true)),
-            'billing_discount' => 0,
-            'billing_discount_code' => null,
-            'billing_subtotal' => 12345,
-            'billing_tax' => 1605,
-            'billing_total' => 13950,
-            'error' => null,
+            'user_id' => User::factory(),
+            'payment_method_id' => PaymentMethod::factory(),
+            'order_status_id' => OrderStatus::factory(),
+            'total_amount' => $this->faker->randomFloat(2, 10, 100),
+            'currency' => $this->faker->currencyCode,
+            'payment_status' => $this->faker->randomElement(['pending', 'paid', 'failed']),
+            'shipping_method' => $this->faker->randomElement(['express', 'standard']),
+            'tracking_number' => $this->faker->optional()->numberBetween(100000, 999999),
+            'shipping_address' => $this->faker->optional()->address,
+            'billing_address' => $this->faker->optional()->address,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ];
     }
 }

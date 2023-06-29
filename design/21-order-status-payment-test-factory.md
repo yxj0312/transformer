@@ -259,14 +259,21 @@ class OrderFactory extends Factory
         return [
             'user_id' => User::factory(),
             'payment_method_id' => PaymentMethod::factory(),
-            'status_id' => OrderStatus::factory(),
-            'total_amount' => $this->faker->randomFloat(2, 10, 500),
-            'currency' => $this->faker->randomElement(['USD', 'EUR']),
-            'shipping_address' => $this->faker->address,
-            'billing_address' => $this->faker->address,
+            'order_status_id' => OrderStatus::factory(),
+            'total_amount' => $this->faker->randomFloat(2, 10, 100),
+            'currency' => $this->faker->currencyCode,
+            'payment_status' => $this->faker->randomElement(['pending', 'paid', 'failed']),
+            'shipping_method' => $this->faker->randomElement(['express', 'standard']),
+            'tracking_number' => $this->faker->optional()->numberBetween(100000, 999999),
+            'shipping_address' => $this->faker->optional()->address,
+            'billing_address' => $this->faker->optional()->address,
+            'created_at' => now(),
+            'updated_at' => now(),
+            'deleted_at' => null,
         ];
     }
 }
+
 ```
 
 **OrderStatusFactory.php**
