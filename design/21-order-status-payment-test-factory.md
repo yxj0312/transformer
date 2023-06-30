@@ -308,7 +308,9 @@ class PaymentMethodFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            // Add other attributes
+            'description' => $this->faker->sentence,
+            'gateway' => $this->faker->word,
+            'is_active' => $this->faker->boolean,
         ];
     }
 }
