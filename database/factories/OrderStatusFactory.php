@@ -17,7 +17,9 @@ class OrderStatusFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'name' => $this->faker->word,
+            'description' => $this->faker->sentence,
+            'is_active' => $this->faker->boolean,
         ];
     }
 }

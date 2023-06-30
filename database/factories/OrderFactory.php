@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\OrderStatus;
 use App\Models\PaymentMethod;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -28,10 +29,7 @@ class OrderFactory extends Factory
             'shipping_method' => $this->faker->randomElement(['express', 'standard']),
             'tracking_number' => $this->faker->optional()->numberBetween(100000, 999999),
             'shipping_address' => $this->faker->optional()->address,
-            'billing_address' => $this->faker->optional()->address,
-            'created_at' => now(),
-            'updated_at' => now(),
-            'deleted_at' => null,
+            'billing_address' => $this->faker->optional()->address
         ];
     }
 }
