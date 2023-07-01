@@ -23,15 +23,26 @@ class OrderTest extends TestCase
         $order = Order::create([
             'user_id' => $user->id,
             'payment_method_id' => $paymentMethod->id,
-            'status_id' => $orderStatus->id,
+            'order_status_id' => $orderStatus->id,
             'total_amount' => 100.00,
             'currency' => 'USD',
+            'payment_status' => 'paid',
+            'shipping_method' => 'express',
             'shipping_address' => '123 Shipping St, City, Country',
             'billing_address' => '456 Billing St, City, Country',
         ]);
 
+        // Assert the order has been created
         $this->assertInstanceOf(Order::class, $order);
-        // Assert other attributes and relationships
+        $this->assertEquals($user->id, $order->user_id);
+        $this->assertEquals($paymentMethod->id, $order->payment_method_id);
+        $this->assertEquals($orderStatus->id, $order->order_status_id);
+        $this->assertEquals(100.00, $order->total_amount);
+        $this->assertEquals('USD', $order->currency);
+        $this->assertEquals('paid', $order->payment_status);
+        $this->assertEquals('express', $order->shipping_method);
+        $this->assertEquals('123 Shipping St, City, Country', $order->shipping_address);
+        $this->assertEquals('456 Billing St, City, Country', $order->billing_address);
     }
 
     public function test_update_order()
@@ -43,12 +54,21 @@ class OrderTest extends TestCase
         $order->update([
             'total_amount' => 200.00,
             'currency' => 'EUR',
-            // Update other attributes
+            'payment_status' => 'failed',
+            'shipping_method' => 'standard',
+            'tracking_number' => '123456',
+            'shipping_address' => '123 Shipping St, City, Country',
+            'billing_address' => '456 Billing St, City, Country',
         ]);
 
         // Assert the order has been updated
         $this->assertEquals(200.00, $order->total_amount);
-        // Assert other attributes
+        $this->assertEquals('EUR', $order->currency);
+        $this->assertEquals('failed', $order->payment_status);
+        $this->assertEquals('standard', $order->shipping_method);
+        $this->assertEquals('123456', $order->tracking_number);
+        $this->assertEquals('123 Shipping St, City, Country', $order->shipping_address);
+        $this->assertEquals('456 Billing St, City, Country', $order->billing_address);
     }
 
     public function test_delete_order()
