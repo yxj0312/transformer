@@ -93,6 +93,9 @@ class OrderTest extends TestCase
         // Create an order and associate a user
         $order = Order::factory()->create();
         $user = User::factory()->create();
+        // $order->user_id = $user->id;
+        # or
+        // $order->user()->associate($user);
         $order->user()->associate($user);
 
         // Assert the relationship between order and user
