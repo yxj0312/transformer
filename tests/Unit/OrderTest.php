@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\PaymentMethod;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
