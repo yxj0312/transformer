@@ -133,7 +133,7 @@ class OrderTest extends TestCase
         // Create an order and associate products
         $order = Order::factory()->create();
         $products = Product::factory()->count(3)->create();
-        # attach quantity and price to the pivot table
+        // attach quantity and price to the pivot table
         $order->products()->attach($products->pluck('id'), [
             'quantity' => 1,
             'price' => 10.00,
