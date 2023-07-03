@@ -34,7 +34,7 @@ class Product extends Model
     /**
      * Get the brand associated with the product.
      */
-    public function brand()
+    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Brand::class);
     }
@@ -42,8 +42,16 @@ class Product extends Model
     /**
      * Get the category associated with the product.
      */
-    public function category()
+    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the orders for the product.
+     */
+    public function orders(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Order::class)->withPivot('quantity', 'price');
     }
 }

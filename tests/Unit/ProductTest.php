@@ -143,4 +143,27 @@ class ProductTest extends TestCase
         $this->assertInstanceOf(Category::class, $product->category);
         $this->assertEquals($category->id, $product->category->id);
     }
+
+    /**
+     * Test the orders relationship of a product.
+     *
+     * @return void
+     */
+    public function test_product_orders_relationship()
+    {
+        // Create a product
+        $product = Product::factory()->create();
+
+        // Create an order
+        $order = $product->orders()->create([
+            'user_id' => 1,
+            'status' => 'pending',
+            'total' => 9.99,
+        ]);
+
+        // Assert the correctness of the product's orders relationship
+        $this->assertInstanceOf(Collection::class, $product->orders);
+        $this->assertInstanceOf(\App\Models\Order::class, $product->orders->first());
+        $this->assertEquals($order->id, $product->orders->first()->id);
+    }
 }
