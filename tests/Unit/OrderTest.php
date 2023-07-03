@@ -125,16 +125,24 @@ class OrderTest extends TestCase
         $this->assertEquals($orderStatus->id, $order->orderStatus->id);
     }
 
+    /**
+     * Test the products relationship of an order.
+     */
     public function test_order_products_relationship()
     {
-        // Create an order
+        // Create an order and associate products
         $order = Order::factory()->create();
-
-        // Create multiple products and associate them with the order
         $products = Product::factory()->count(3)->create();
-        $order->products()->attach($products, ['quantity' => 1]);
+        # attach quantity and price to the pivot table
+        $order->products()->attach($products->pluck('id'), [
+            'quantity' => 1,
+            'price' => 10.00,
+        ]);
 
         // Assert the relationship between order and products
-        $this->assertCount(3, $order->products);
+        $this->assertInstanceOf(Product::class, $order->products->first());
+        $this->assertEquals(1, $order->products->first()->pivot->quantity);
+        $this->assertEquals(10.00, $order->products->first()->pivot->price);
+        $this->assertEquals(3, $order->products->count());
     }
 }
