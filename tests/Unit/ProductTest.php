@@ -4,7 +4,11 @@ namespace Tests\Unit;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderStatus;
+use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Collection;
@@ -155,15 +159,17 @@ class ProductTest extends TestCase
         $product = Product::factory()->create();
 
         // Create an order
-        $order = $product->orders()->create([
-            'user_id' => 1,
-            'status' => 'pending',
-            'total' => 9.99,
+        $order = Order::factory()->create();
+
+        // Attach the product to the order
+        $order->products()->attach($product->id, [
+            'quantity' => 1,
+            'price' => $product->price,
         ]);
 
         // Assert the correctness of the product's orders relationship
         $this->assertInstanceOf(Collection::class, $product->orders);
-        $this->assertInstanceOf(\App\Models\Order::class, $product->orders->first());
+        $this->assertInstanceOf(Order::class, $product->orders->first());
         $this->assertEquals($order->id, $product->orders->first()->id);
     }
 }
