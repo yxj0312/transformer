@@ -54,4 +54,12 @@ class Order extends Model
     {
         return $this->belongsToMany(Product::class)->withPivot('quantity', 'price');
     }
+
+    /**
+     * Get the coupons for the order.
+     */
+    public function coupons()
+    {
+        return $this->hasMany(Coupon::class);
+    }
 }
