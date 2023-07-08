@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +21,8 @@ class CouponFactory extends Factory
             'code' => $this->faker->unique()->word(),
             'discount_amount' => $this->faker->randomFloat(2, 1, 100),
             'discount_type' => $this->faker->randomElement(['fixed', 'percentage']),
+            'couponable_id' => Product::factory(),
+            'couponable_type' => Product::class,
         ];
     }
 }

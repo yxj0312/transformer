@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('couponable_id');
             $table->string('couponable_type');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
