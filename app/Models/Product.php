@@ -58,9 +58,9 @@ class Product extends Model
     /**
      * Get the coupons for the product.
      */
-    public function coupons(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function coupons(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
-        return $this->hasMany(Coupon::class);
+        return $this->morphMany(Coupon::class, 'couponable');
     }
     
 }

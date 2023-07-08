@@ -9,26 +9,15 @@ class Coupon extends Model
 {
     use HasFactory;
 
-    const DISCOUNT_TYPE_FIXED = 'fixed';
-    const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+    public const DISCOUNT_TYPE_FIXED = 'fixed';
+    public const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
 
-    // 其他属性和方法...
+    protected $fillable = [
+        'code', 'discount_amount', 'discount_type'
+    ];
 
-    public function product()
+    public function couponable()
     {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function order()
-    {
-        return $this->belongsTo(Order::class);
-    }
-
-    public function getDiscountTypeOptions()
-    {
-        return [
-            self::DISCOUNT_TYPE_FIXED => 'Fixed Amount',
-            self::DISCOUNT_TYPE_PERCENTAGE => 'Percentage',
-        ];
+        return $this->morphTo();
     }
 }

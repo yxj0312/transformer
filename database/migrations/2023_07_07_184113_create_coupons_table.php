@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->decimal('discount_amount', 10, 2);
-            $table->unsignedBigInteger('product_id')->nullable();
-            $table->unsignedBigInteger('order_id')->nullable();
+            $table->string('discount_type');
+            $table->unsignedBigInteger('couponable_id');
+            $table->string('couponable_type');
             $table->timestamps();
-            
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
     }
 

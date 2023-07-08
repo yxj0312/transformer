@@ -58,8 +58,8 @@ class Order extends Model
     /**
      * Get the coupons for the order.
      */
-    public function coupons()
+    public function coupons(): \Illuminate\Database\Eloquent\Relations\MorphToMany
     {
-        return $this->hasMany(Coupon::class);
+        return $this->morphToMany(Coupon::class, 'couponable');
     }
 }
