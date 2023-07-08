@@ -13,7 +13,7 @@ class Coupon extends Model
     public const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
 
     protected $fillable = [
-        'code', 'discount_amount', 'discount_type'
+        'code', 'discount_amount', 'discount_type', 'couponable_id', 'couponable_type',
     ];
 
     public function couponable()
