@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\PaymentMethod;
@@ -171,5 +172,56 @@ class ProductTest extends TestCase
         $this->assertInstanceOf(Collection::class, $product->orders);
         $this->assertInstanceOf(Order::class, $product->orders->first());
         $this->assertEquals($order->id, $product->orders->first()->id);
+    }
+
+    /**
+     * Test the orders relationship of a product.
+     *
+     * @return void
+     */
+    public function test_product_orders_relationship_with_pivot()
+    {
+        // Create a product
+        $product = Product::factory()->create();
+
+        // Create an order
+        $order = Order::factory()->create();
+
+        // Attach the product to the order
+        $order->products()->attach($product->id, [
+            'quantity' => 1,
+            'price' => $product->price,
+        ]);
+
+        // Assert the correctness of the product's orders relationship
+        $this->assertInstanceOf(Collection::class, $product->orders);
+        $this->assertInstanceOf(Order::class, $product->orders->first());
+        $this->assertEquals($order->id, $product->orders->first()->id);
+        $this->assertEquals(1, $product->orders->first()->pivot->quantity);
+        $this->assertEquals($product->price, $product->orders->first()->pivot->price);
+    }
+
+    /**
+     * Test the coupon relationship of a product.
+     *
+     * @return void
+     */
+    public function test_product_coupons_relationship()
+    {
+        // Create a product
+        $product = Product::factory()->create();
+
+        // Create a coupon
+        $coupon = Coupon::factory()->create(
+            [
+                'couponable_id' => $product->id,
+                'couponable_type' => Product::class,
+            ]
+        );
+
+        // Assert the correctness of the product's coupons relationship
+        $this->assertInstanceOf(Collection::class, $product->coupons);
+        $this->assertInstanceOf(Coupon::class, $product->coupons->first());
+        $this->assertEquals($coupon->id, $product->coupons->first()->id);
     }
 }

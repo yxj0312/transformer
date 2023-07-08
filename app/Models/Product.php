@@ -62,5 +62,4 @@ class Product extends Model
     {
         return $this->morphMany(Coupon::class, 'couponable');
     }
-    
 }
