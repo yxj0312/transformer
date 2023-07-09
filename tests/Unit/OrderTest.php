@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\Coupon;
 use App\Models\Order;
 use App\Models\OrderStatus;
 use App\Models\PaymentMethod;
@@ -144,5 +145,43 @@ class OrderTest extends TestCase
         $this->assertEquals(1, $order->products->first()->pivot->quantity);
         $this->assertEquals(10.00, $order->products->first()->pivot->price);
         $this->assertEquals(3, $order->products->count());
+    }
+
+    /**
+     * Test the products relationship of an order.
+     */
+    public function test_order_products_relationship_with_quantity_and_price()
+    {
+        // Create an order and associate products
+        $order = Order::factory()->create();
+        $products = Product::factory()->count(3)->create();
+        // attach quantity and price to the pivot table
+        $order->products()->attach($products->pluck('id'), [
+            'quantity' => 1,
+            'price' => 10.00,
+        ]);
+
+        // Assert the relationship between order and products
+        $this->assertInstanceOf(Product::class, $order->products->first());
+        $this->assertEquals(1, $order->products->first()->pivot->quantity);
+        $this->assertEquals(10.00, $order->products->first()->pivot->price);
+        $this->assertEquals(3, $order->products->count());
+    }
+
+    /**
+     * Test the coupons relationship of an order.
+     */
+    public function test_order_coupons_relationship()
+    {
+        // Create an order and associate coupons
+        $order = Order::factory()->create();
+        $coupons = Coupon::factory()->create([
+            'couponable_id' => $order->id,
+            'couponable_type' => Order::class,
+        ]);
+
+        // Assert the relationship between order and coupons
+        $this->assertInstanceOf(Coupon::class, $order->coupons->first());
+        $this->assertEquals($coupons->id, $order->coupons->first()->id);
     }
 }
