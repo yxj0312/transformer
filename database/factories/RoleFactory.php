@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,11 +17,32 @@ class RoleFactory extends Factory
      */
     public function definition()
     {
+       $roles = [
+            Role::ROLE_ADMIN => [
+                'slug' => 'admin',
+                'description' => 'Administrator role',
+                'is_default' => true,
+            ],
+            Role::ROLE_CUSTOMER => [
+                'slug' => 'customer',
+                'description' => 'Customer role',
+                'is_default' => false,
+            ],
+            Role::ROLE_VENDOR => [
+                'slug' => 'vendor',
+                'description' => 'Vendor role',
+                'is_default' => false,
+            ],
+        ];
+
+        $roleName = $this->faker->randomElement(array_keys($roles));
+        $roleData = $roles[$roleName];
+
         return [
-            'name' => $this->faker->word,
-            'slug' => $this->faker->unique()->slug,
-            'description' => $this->faker->sentence,
-            'is_default' => $this->faker->boolean,
+            'name' => $roleName,
+            'slug' => $roleData['slug'],
+            'description' => $roleData['description'],
+            'is_default' => $roleData['is_default'],
         ];
     }
 }

@@ -10,6 +10,10 @@ class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_CUSTOMER = 'customer';
+    public const ROLE_VENDOR = 'vendor';
+
     protected $fillable = [
         'name',
         'slug',
