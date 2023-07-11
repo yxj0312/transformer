@@ -71,9 +71,9 @@ class AddressTest extends TestCase
     {
         $address = Address::factory()->create();
        
-        Cart::factory()->create(['shipping_address_id' => $address->id]);
-        Cart::factory()->create(['billing_address_id' => $address->id]);
-   
+        Cart::factory()->create(['shipping_address_id' => $address->id, 'user_id' => $address->user_id]);
+        Cart::factory()->create(['billing_address_id' => $address->id, 'user_id' => $address->user_id]);
+
         $this->assertInstanceOf(Cart::class, $address->shippingCarts->first());
         $this->assertInstanceOf(Cart::class, $address->billingCarts->first());
     }
