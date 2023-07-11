@@ -92,7 +92,11 @@ class CartTest extends TestCase
     public function test_shipping_address_in_cart_belongs_to_address()
     {
         $address = Address::factory()->create();
-        $cart = Cart::factory()->create(['shipping_address_id' => $address->id]);
+        $cart = Cart::factory()->create(
+            [
+                'shipping_address_id' => $address->id,
+                'user_id' => $address->user_id,
+            ]);
 
         $this->assertInstanceOf(Address::class, $cart->shippingAddress);
         $this->assertEquals($address->id, $cart->shippingAddress->id);
@@ -101,7 +105,10 @@ class CartTest extends TestCase
     public function test_billing_address_in_cart_belongs_to_address()
     {
         $address = Address::factory()->create();
-        $cart = Cart::factory()->create(['billing_address_id' => $address->id]);
+        $cart = Cart::factory()->create([
+            'billing_address_id' => $address->id,
+            'user_id' => $address->user_id
+        ]);
 
         $this->assertInstanceOf(Address::class, $cart->billingAddress);
         $this->assertEquals($address->id, $cart->billingAddress->id);
