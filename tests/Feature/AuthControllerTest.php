@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
@@ -14,7 +14,7 @@ class AuthControllerTest extends TestCase
 
     public function test_register()
     {
-        $role = \App\Models\Role::factory()->create();
+        $role = Role::factory()->create();
 
         $userData = [
             'name' => 'John Doe',
