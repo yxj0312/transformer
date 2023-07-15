@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,21 +10,21 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role_id' => 'required|exists:roles,id',
-        ]);
+        // Validate the user
+        $validatedData = $request->validated();
 
+        // Hash the password
         $validatedData['password'] = bcrypt($validatedData['password']);
 
+        // Create the user
         $user = User::create($validatedData);
 
+        // Create token
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Return the user and token
         return response()->json([
             'user' => $user,
             'token' => $token,
