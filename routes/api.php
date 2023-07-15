@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductApiController;
 use App\Http\Controllers\ProductController;
 use App\Http\Resources\ProductResource;
