@@ -5,12 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use App\Repositories\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    protected $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+    
     public function register(RegisterRequest $request)
     {
         // Validate the user
@@ -20,7 +28,7 @@ class AuthController extends Controller
         $validatedData['password'] = bcrypt($validatedData['password']);
 
         // Create the user
-        $user = User::create($validatedData);
+        $user = $this->userRepository->create($validatedData);;
 
         // Create token
         $token = $user->createToken('auth_token')->plainTextToken;
