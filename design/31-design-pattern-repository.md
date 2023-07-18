@@ -187,3 +187,25 @@ $this->app->bind(UserRepositoryInterface::class, UserRepositoryDoctrine::class);
 4. 可扩展性：
 
    如果你决定更改数据访问逻辑，例如从关系型数据库切换到 NoSQL 数据库，你只需修改 `UserRepository` 的实现，而不需要修改 `AuthController` 中的代码。这样，你可以根据需求灵活地调整数据访问逻辑，而不影响其他部分的代码。
+
+public function login(LoginRequest $request)
+{
+    $credentials = $request->validated();
+
+    $user = $this->userRepository->findByEmail($credentials['email']);
+
+    if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        throw ValidationException::withMessages([
+            'email' => 'The provided credentials are incorrect.',
+        ]);
+    }
+
+    Auth::login($user);
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'user' => $user,
+        'token' => $token,
+    ]);
+}
