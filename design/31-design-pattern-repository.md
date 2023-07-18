@@ -188,6 +188,11 @@ $this->app->bind(UserRepositoryInterface::class, UserRepositoryDoctrine::class);
 
    如果你决定更改数据访问逻辑，例如从关系型数据库切换到 NoSQL 数据库，你只需修改 `UserRepository` 的实现，而不需要修改 `AuthController` 中的代码。这样，你可以根据需求灵活地调整数据访问逻辑，而不影响其他部分的代码。
 
+是的，当使用仓储模式时，你不再直接使用 `Auth::attempt()` 方法进行身份验证。相反，你应该使用仓储接口中的方法来处理用户身份验证的逻辑。
+
+以下是一个可能的重写后的 `login` 方法示例：
+
+```php
 public function login(LoginRequest $request)
 {
     $credentials = $request->validated();
@@ -209,3 +214,8 @@ public function login(LoginRequest $request)
         'token' => $token,
     ]);
 }
+```
+
+在上述示例中，我们首先使用仓储接口的 `findByEmail` 方法根据电子邮件查找用户。然后，我们使用 `Hash::check()` 方法来验证用户提供的密码是否与数据库中的密码匹配。如果验证失败，我们抛出一个验证异常。如果验证成功，我们使用 `Auth::login()` 方法手动登录用户。
+
+请注意，上述示例中的实现仅供参考，你可以根据实际需求进行适当的调整和扩展。
