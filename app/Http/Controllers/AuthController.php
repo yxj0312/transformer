@@ -28,7 +28,7 @@ class AuthController extends Controller
         $validatedData['password'] = bcrypt($validatedData['password']);
 
         // Create the user
-        $user = $this->userRepository->create($validatedData);;
+        $user = $this->userRepository->create($validatedData);
 
         // Create token
         $token = $user->createToken('auth_token')->plainTextToken;
