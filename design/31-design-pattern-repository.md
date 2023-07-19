@@ -242,3 +242,32 @@ interface UserRepositoryInterface
 通过将 `findByEmail` 方法添加到接口中，你可以确保 `UserRepository` 类实现了该方法，同时也允许在需要的地方依赖于 `UserRepositoryInterface` 接口进行编程，而不关心具体的实现。
 
 在 `UserRepository` 类中，你可以实现 `findByEmail` 方法来根据电子邮件查找用户。
+
+在 `UserRepository` 类中，你可以实现 `findByEmail` 方法来根据电子邮件查找用户。下面是一个可能的实现示例：
+
+```php
+<?php
+
+namespace App\Repositories;
+
+use App\Models\User;
+
+class UserRepository implements UserRepositoryInterface
+{
+    public function create(array $data): User
+    {
+        // 创建用户并保存到数据库
+    }
+
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
+    }
+
+    // 其他数据访问方法...
+}
+```
+
+在上面的示例中，`findByEmail` 方法使用 Eloquent 查询构建器来执行查找操作。它通过使用 `User` 模型和 `where` 条件来查询具有指定电子邮件的用户。如果找到匹配的用户，它将返回该用户实例，否则返回 `null`。
+
+请注意，这只是一个示例实现，你可能需要根据你的数据库结构和业务逻辑进行适当的修改。
