@@ -219,3 +219,26 @@ public function login(LoginRequest $request)
 在上述示例中，我们首先使用仓储接口的 `findByEmail` 方法根据电子邮件查找用户。然后，我们使用 `Hash::check()` 方法来验证用户提供的密码是否与数据库中的密码匹配。如果验证失败，我们抛出一个验证异常。如果验证成功，我们使用 `Auth::login()` 方法手动登录用户。
 
 请注意，上述示例中的实现仅供参考，你可以根据实际需求进行适当的调整和扩展。
+
+在 `UserRepositoryInterface` 中抽象一个 `findByEmail` 方法是一个好的做法，特别是如果你的应用程序需要通过电子邮件来查找用户的功能。这样做可以确保你的代码遵循依赖倒置原则，即面向接口编程而不是具体实现。
+
+以下是更新后的 `UserRepositoryInterface` 示例：
+
+```php
+<?php
+
+namespace App\Repositories;
+
+use App\Models\User;
+
+interface UserRepositoryInterface
+{
+    public function create(array $data): User;
+
+    public function findByEmail(string $email): ?User;
+}
+```
+
+通过将 `findByEmail` 方法添加到接口中，你可以确保 `UserRepository` 类实现了该方法，同时也允许在需要的地方依赖于 `UserRepositoryInterface` 接口进行编程，而不关心具体的实现。
+
+在 `UserRepository` 类中，你可以实现 `findByEmail` 方法来根据电子邮件查找用户。
