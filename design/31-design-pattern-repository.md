@@ -271,3 +271,97 @@ class UserRepository implements UserRepositoryInterface
 在上面的示例中，`findByEmail` 方法使用 Eloquent 查询构建器来执行查找操作。它通过使用 `User` 模型和 `where` 条件来查询具有指定电子邮件的用户。如果找到匹配的用户，它将返回该用户实例，否则返回 `null`。
 
 请注意，这只是一个示例实现，你可能需要根据你的数据库结构和业务逻辑进行适当的修改。
+
+你提出的观点是正确的，我理解你的疑惑。让我更清楚地解释一下：
+
+使用仓储结构的目的是为了将数据访问逻辑与控制器代码解耦，从而提高代码的可维护性和可测试性。仓储结构允许你在不修改控制器的情况下更换数据访问层的实现，比如从 Eloquent ORM 切换到其他 ORM 或存储方式。
+
+对于登录操作，在实现上可以使用仓储结构，但确实也有一点矛盾。在你的实现中，你在控制器中使用了 `Auth::login($user)` 来手动登录用户，这样的确与仓储结构的目的存在一些冲突。如果你的代码完全基于仓储结构，应该避免直接使用 `Auth` Facade。
+
+为了解决这个问题，你可以在 UserRepository 中添加一个新的方法，比如 `loginUser(User $user)`，然后在该方法中使用 `Auth::login($user)` 来登录用户。然后在控制器中调用这个新方法来登录用户，而不是直接在控制器中使用 `Auth::login`。
+
+修改后的 UserRepository 代码：
+
+```php
+<?php
+
+namespace App\Repositories;
+
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
+class UserRepository implements UserRepositoryInterface
+{
+    public function create(array $data): User
+    {
+        // 创建用户并保存到数据库
+    }
+
+    public function findByEmail(string $email): ?User
+    {
+        // 根据电子邮件查找用户
+    }
+
+    public function loginUser(User $user)
+    {
+        Auth::login($user);
+    }
+
+    // 其他数据访问方法...
+}
+```
+
+修改后的 AuthController 代码：
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use App\Repositories\UserRepositoryInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+
+class AuthController extends Controller
+{
+    protected $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+    
+    public function register(RegisterRequest $request)
+    {
+        // ...
+
+        $user = $this->userRepository->create($validatedData);
+        $this->userRepository->loginUser($user); // 使用仓储结构登录用户
+
+        // ...
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->validated();
+
+        $user = $this->userRepository->findByEmail($credentials['email']);
+
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => 'The provided credentials are incorrect.',
+            ]);
+        }
+
+        $this->userRepository->loginUser($user); // 使用仓储结构登录用户
+
+        // ...
+    }
+}
+```
+
+通过这样的修改，你成功将登录操作的 `Auth::login` 调用封装在 UserRepository 内部，并在控制器中使用 UserRepository 来实现登录。这样就更符合仓储结构的目的，同时使控制器代码与认证逻辑解耦。
