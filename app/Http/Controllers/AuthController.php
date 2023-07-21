@@ -6,17 +6,21 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use App\Repositories\UserRepositoryInterface;
+use App\Services\AuthServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     protected $userRepository;
+    protected $authService;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository, AuthServiceInterface $authService)
     {
         $this->userRepository = $userRepository;
+        $this->authService = $authService;
     }
     
     public function register(RegisterRequest $request)
@@ -42,20 +46,26 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request)
     {
+        // Validate the user
         $credentials = $request->validated();
 
-        if (!Auth::attempt($credentials)) {
+        $user = $this->userRepository->findByEmail($credentials['email']);
+
+        if (!$user) {
             throw ValidationException::withMessages([
                 'email' => 'The provided credentials are incorrect.',
             ]);
         }
 
-        $user = $request->user();
+        // Attempt login using AuthService
+        $authenticatedUser = $this->authService->login($user, $credentials['password']);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Create token
+        $token = $authenticatedUser->createToken('auth_token')->plainTextToken;
 
+        // Return the user and token
         return response()->json([
-            'user' => $user,
+            'user' => $authenticatedUser,
             'token' => $token,
         ]);
     }

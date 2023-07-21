@@ -488,6 +488,9 @@ class AuthService implements AuthServiceInterface
                 'email' => 'The provided credentials are incorrect.',
             ]);
         }
+
+        // If login successful, retrieve the authenticated user
+        return Auth::user();
     }
 }
 ```
@@ -519,6 +522,78 @@ class AuthController extends Controller
 }
 ```
 
-通过使用接口，如果以后需要更改 `AuthService` 的实现，只需创建一个新的实现类，并让该类实现 `AuthServiceInterface` 接口即可。然后，在控制器的构造函数中注入新的实现类即可，而不需要修改控制器的其余部分。
+Apologies for the oversight. You are correct; we should avoid using `Auth::user()` in the controller. Let's update the `AuthService` to return the authenticated user after a successful login, and then we can return the user from the `login` method in the `AuthController`. Here's the revised implementation:
 
-总结起来，是否使用接口取决于您的项目需求和设计偏好。对于小型项目或者认证逻辑相对简单的情况，可能不需要使用接口。但是对于大型项目或者希望提高代码的可扩展性和灵活性的情况，使用接口可能是一个值得考虑的选择。
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
+use App\Repositories\UserRepositoryInterface;
+use App\Services\AuthServiceInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+
+class AuthController extends Controller
+{
+    protected $userRepository;
+    protected $authService;
+
+    public function __construct(UserRepositoryInterface $userRepository, AuthServiceInterface $authService)
+    {
+        $this->userRepository = $userRepository;
+        $this->authService = $authService;
+    }
+
+    public function register(RegisterRequest $request)
+    {
+        // Validate the user
+        $validatedData = $request->validated();
+
+        // Hash the password
+        $validatedData['password'] = bcrypt($validatedData['password']);
+
+        // Create the user
+        $user = $this->userRepository->create($validatedData);
+
+        // Create token
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // Return the user and token
+        return response()->json([
+            'user' => $user,
+            'token' => $token,
+        ], 201);
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->validated();
+        $user = $this->userRepository->findByEmail($credentials['email']);
+
+        if (!$user) {
+            throw ValidationException::withMessages([
+                'email' => 'The provided credentials are incorrect.',
+            ]);
+        }
+
+        // Attempt login using AuthService
+        $authenticatedUser = $this->authService->login($user, $credentials['password']);
+
+        // Create token
+        $token = $authenticatedUser->createToken('auth_token')->plainTextToken;
+
+        // Return the authenticated user and token
+        return response()->json([
+            'user' => $authenticatedUser,
+            'token' => $token,
+        ]);
+    }
+}
+```
+
+Now, the `AuthService` will return the authenticated user after a successful login, and the controller will return the authenticated user and token in the JSON response without directly using `Auth::user()`.
