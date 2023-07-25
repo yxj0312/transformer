@@ -13,6 +13,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
+
     <body class="bg-gray-100">
 
     <!-- Navigation Bar -->
@@ -24,6 +25,10 @@
                 <a href="#" class="text-white">Products</a>
                 <a href="#" class="text-white">About Us</a>
                 <a href="#" class="text-white">Contact</a>
+                <!-- User Registration Button -->
+                <button class="text-white" @click="showRegistrationModal">Register</button>
+                <!-- User Login Button -->
+                <button class="text-white" @click="showLoginModal">Login</button>
             </div>
         </div>
     </nav>
@@ -63,5 +68,93 @@
         </div>
     </footer>
 
+    <!-- User Registration Modal -->
+    <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50" v-if="showRegistration">
+        <div class="bg-white p-8 rounded shadow-md">
+            <h2 class="text-2xl font-bold mb-4">User Registration</h2>
+            <!-- Registration form -->
+            <form @submit.prevent="registerUser">
+                <input type="text" v-model="name" placeholder="Name" class="w-full mb-2 p-2 border border-gray-300 rounded">
+                <input type="email" v-model="email" placeholder="Email" class="w-full mb-2 p-2 border border-gray-300 rounded">
+                <input type="password" v-model="password" placeholder="Password" class="w-full mb-4 p-2 border border-gray-300 rounded">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Register</button>
+                <button @click="closeRegistrationModal" class="ml-2 py-2 px-4 border rounded">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Login Modal -->
+    <div class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50" v-if="showLogin">
+        <div class="bg-white p-8 rounded shadow-md">
+            <h2 class="text-2xl font-bold mb-4">User Login</h2>
+            <!-- Login form -->
+            <form @submit.prevent="loginUser">
+                <input type="email" v-model="loginEmail" placeholder="Email" class="w-full mb-2 p-2 border border-gray-300 rounded">
+                <input type="password" v-model="loginPassword" placeholder="Password" class="w-full mb-4 p-2 border border-gray-300 rounded">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">Login</button>
+                <button @click="closeLoginModal" class="ml-2 py-2 px-4 border rounded">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Avatar (Placeholder) -->
+    <div class="fixed top-0 right-0 m-4 p-2 bg-blue-500 text-white rounded-full cursor-pointer" @click="showUserDropdown">
+        <!-- Add a user avatar image here or use a font icon (e.g., fontawesome) -->
+        User
+    </div>
+
+    <!-- User Dropdown (Placeholder) -->
+    <div class="fixed top-0 right-0 mt-16 w-40 bg-white border rounded shadow-md" v-if="showUserDropdown">
+        <ul>
+            <!-- Add user-related dropdown options here (e.g., My Account, Logout) -->
+            <li class="px-4 py-2 hover:bg-gray-100">My Account</li>
+            <li class="px-4 py-2 hover:bg-gray-100">Logout</li>
+        </ul>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    showRegistration: false,
+                    showLogin: false,
+                    name: '',
+                    email: '',
+                    password: '',
+                    loginEmail: '',
+                    loginPassword: '',
+                    showUserDropdown: false,
+                };
+            },
+            methods: {
+                showRegistrationModal() {
+                    this.showRegistration = true;
+                },
+                closeRegistrationModal() {
+                    this.showRegistration = false;
+                },
+                registerUser() {
+                    // Implement user registration logic here
+                    // For demonstration purposes, we'll just close the modal
+                    this.closeRegistrationModal();
+                },
+                showLoginModal() {
+                    this.showLogin = true;
+                },
+                closeLoginModal() {
+                    this.showLogin = false;
+                },
+                loginUser() {
+                    // Implement user login logic here
+                    // For demonstration purposes, we'll just close the modal
+                    this.closeLoginModal();
+                },
+                showUserDropdown() {
+                    this.showUserDropdown = !this.showUserDropdown;
+                },
+            },
+        }).mount('#app');
+    </script>
 </body>
 </html>
