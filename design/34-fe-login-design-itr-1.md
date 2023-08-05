@@ -380,3 +380,63 @@ frontend
    构建后的前端资源将被保存在 `frontend/dist` 目录中，并由 Laravel 的视图文件加载。
 
 请注意，上述步骤是基于 Laravel 9 使用 Vite 来处理前端资源的一般方法。具体的项目结构和配置可能因项目的具体需求而有所调整。如果你在使用过程中遇到问题，请参考 Laravel 9 和 Vite 的官方文档来获取更多细节和指导。
+
+## ITR-3: 使用Vite处理前端资源
+
+对的，你可以不在 `frontend` 文件夹下建立 `resource` 文件夹，直接在 `frontend` 文件夹下放置相关的前端资源。
+
+在 Laravel 中，你可以使用 `laravel-vite` 插件来结合 Vite 构建前端资源。为了在 `frontend` 文件夹下引入 Vite，你需要进行以下操作：
+
+1. 确保你已经在 Laravel 项目根目录下安装了 `laravel-vite` 插件，如果没有安装，可以通过 Composer 进行安装：
+
+```bash
+composer require laravel/vite
+```
+
+2. 在根目录的 `config/vite.php` 文件中配置 `vite.php` 的路径。默认情况下，`laravel-vite` 插件会在项目根目录下寻找 `vite.config.js` 文件，但你希望在 `frontend` 文件夹下使用 Vite，因此需要进行配置。打开 `config/vite.php` 文件，添加如下配置：
+
+```php
+// config/vite.php
+
+return [
+    // ...
+    'vite_path' => base_path('frontend/vite.config.js'),
+    // ...
+];
+```
+
+3. 在 `app.blade.php` 文件中使用 `@vite` 指令来引入 Vite。确保你在 `<head>` 部分使用 `@vite` 指令，来引入 Vite 运行时和前端资源（CSS 和 JS 文件）。示例如下：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Store</title>
+    @vite
+</head>
+<body class="bg-gray-100">
+    <div id="app"></div>
+</body>
+</html>
+```
+
+4. 在 `frontend` 文件夹中创建 `vite.config.js` 文件，用来配置 Vite 的构建选项。在这个文件中，你可以指定输入（input）和输出（output）的路径，以及其他 Vite 相关的配置。示例如下：
+
+```js
+// frontend/vite.config.js
+
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
+
+export default defineConfig({
+    plugins: [
+        laravel()
+    ],
+});
+```
+
+5. 确保你的 `main.js` 文件放置在 `frontend` 文件夹下的正确路径。例如，你可以将 `main.js` 放在 `frontend/src` 目录下。
+
+现在，你应该可以在 `frontend` 文件夹下使用 Vite 了。在这个结构中，前端资源与后端的 Blade 文件完全分离，并且你可以利用 `laravel-vite` 插件的强大功能来处理前端资源的构建和管理。
