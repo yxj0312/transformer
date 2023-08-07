@@ -440,3 +440,54 @@ export default defineConfig({
 5. 确保你的 `main.js` 文件放置在 `frontend` 文件夹下的正确路径。例如，你可以将 `main.js` 放在 `frontend/src` 目录下。
 
 现在，你应该可以在 `frontend` 文件夹下使用 Vite 了。在这个结构中，前端资源与后端的 Blade 文件完全分离，并且你可以利用 `laravel-vite` 插件的强大功能来处理前端资源的构建和管理。
+
+## ITR-4: 其他方案
+
+当你在项目中使用 Vue 时，通常建议将 `views` 和 `components` 分别放在不同的文件夹中，以保持代码的清晰和组织良好。你可以按照以下方式组织你的文件结构：
+
+1. 在 `resources/js` 文件夹下创建一个 `views` 子文件夹，用于存放页面级的 Vue 组件。
+
+2. 在 `resources/js` 文件夹下创建一个 `components` 子文件夹，用于存放可复用的 Vue 组件。
+
+3. 将页面级的 Vue 组件（如 `App.vue`）放入 `resources/js/views` 文件夹中。
+
+4. 将可复用的 Vue 组件（如 `Navbar.vue`、`Footer.vue` 等）放入 `resources/js/components` 文件夹中。
+
+5. 在 `resources/js/app.js` 文件中引入 `App.vue` 组件，并在 `createApp` 时挂载到 `#app`。
+
+```js
+// resources/js/app.js
+import { createApp } from 'vue';
+import App from './views/App.vue';
+
+createApp(App).mount('#app');
+```
+
+6. 在需要使用可复用组件的页面级组件中引入并使用它们。
+
+例如，如果在 `App.vue` 中使用了 `Navbar.vue` 和 `Footer.vue` 组件：
+
+```vue
+<!-- resources/js/views/App.vue -->
+<template>
+  <div>
+    <navbar></navbar>
+    <!-- Your main content here -->
+    <footer></footer>
+  </div>
+</template>
+
+<script>
+import Navbar from '../components/Navbar.vue';
+import Footer from '../components/Footer.vue';
+
+export default {
+  components: {
+    Navbar,
+    Footer,
+  },
+};
+</script>
+```
+
+通过这样的文件结构，你可以将页面级组件和可复用组件分开，使代码结构更加清晰和易于维护。同时，在 `resources/js` 文件夹中的子文件夹可以按照自己的需要进一步划分，比如将 `components` 再细分为 `common`、`layout` 等，以便更好地组织你的 Vue 组件。
