@@ -1,12 +1,10 @@
 import { defineConfig } from 'vite';
+import vue from "@vitejs/plugin-vue";
 import laravel from 'laravel-vite-plugin';
-const { createVuePlugin } = require('vite-plugin-vue');
-const { createVueJsxPlugin } = require('vite-plugin-vue-jsx');
 
 export default defineConfig({
     plugins: [
-        createVuePlugin(), // Vite Vue 插件
-        createVueJsxPlugin(), // 支持 Vue JSX
+        vue(),
         laravel({
             input: [
                 'resources/css/app.css',
