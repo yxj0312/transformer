@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100">
+  
     <!-- Use the Navbar component -->
     <Navbar />
 
@@ -28,7 +28,6 @@
     <footer class="bg-gray-900 text-white py-8">
       <div class="container mx-auto text-center">&copy; 2023 Online Store. All rights reserved.</div>
     </footer>
-  </div>
 </template>
 
 <script setup>
