@@ -14,14 +14,40 @@
       </div>
     </div>
   </nav>
+
+  <!-- Registration Modal -->
+  <RegistrationModal :isOpen="isRegistrationModalVisible" @close="closeRegistrationModal" />
+
+  <!-- Login Modal -->
+  <LoginModal :isOpen="isLoginModalVisible" @close="closeLoginModal" />
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import RegistrationModal from './RegistrationModal.vue';
+import LoginModal from './LoginModal.vue';
+
+const isRegistrationModalVisible = ref(false);
+const isLoginModalVisible = ref(false);
+
 const showRegistrationModal = () => {
-  // Your logic for showing the registration modal
+  isRegistrationModalVisible.value = true;
+};
+
+const closeRegistrationModal = () => {
+  isRegistrationModalVisible.value = false;
 };
 
 const showLoginModal = () => {
-  // Your logic for showing the login modal
+  isLoginModalVisible.value = true;
 };
+
+const closeLoginModal = () => {
+  isLoginModalVisible.value = false;
+};
+
+// Your API call functions for registration and login
+// Call these functions inside the corresponding modal functions
+// For example, after a successful registration, close the registration modal and show a success message
+// Similarly, after successful login, close the login modal and perform further actions
 </script>
