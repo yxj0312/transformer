@@ -1,12 +1,14 @@
 <template>
-  <div v-if="isOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div class="bg-white p-8 rounded-md shadow-md">
-      <h2 class="text-xl font-semibold">{{ title }}</h2>
-      <button class="absolute top-4 right-4 text-gray-500" @click="close">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M10 8.586L15.293 3.293a1 1 0 111.414 1.414L11.414 10l5.293 5.293a1 1 0 11-1.414 1.414L10 11.414l-5.293 5.293a1 1 0 11-1.414-1.414L8.586 10 3.293 4.707a1 1 0 111.414-1.414L10 8.586z" clip-rule="evenodd" />
-        </svg>
-      </button>
+  <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+      <div class="flex justify-end">
+        <button @click="closeModal" class="text-gray-500 hover:text-gray-700">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <h2 class="text-2xl font-semibold mb-4">{{ title }}</h2>
       <slot></slot>
     </div>
   </div>
