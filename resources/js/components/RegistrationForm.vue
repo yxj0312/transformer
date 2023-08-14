@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="registerUser" class="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
-    <h2 class="text-2xl font-semibold mb-4">Register</h2>
+    <!-- <h2 class="text-2xl font-semibold mb-4">Register</h2> -->
     
     <label class="block mb-4">
       Name:
