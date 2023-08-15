@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-blue-500 p-4">
+  <nav class="bg-blue-500 p-4 relative">
     <div class="container mx-auto flex items-center justify-between">
       <div class="text-white text-2xl font-bold">Logo</div>
       <div class="flex space-x-4">
