@@ -18,14 +18,14 @@
         <input v-model="formData.password" type="password" class="w-full border rounded-md p-2">
       </div>
       
-      <div>
-        <label class="font-semibold">Role:</label>
-        <select v-model="formData.role_id" class="w-full border rounded-md p-2">
-          <option value="admin">Admin</option>
-          <option value="customer">Customer</option>
-          <option value="vendor">Vendor</option>
-        </select>
-      </div>
+    <div>
+      <label class="font-semibold">Role:</label>
+      <select v-model="formData.role_id" class="w-full border rounded-md p-2">
+        <option value="1">Admin</option>
+        <option value="2">Customer</option>
+        <option value="3">Vendor</option>
+      </select>
+    </div>
     </div>
     
     <div>
