@@ -78,7 +78,7 @@ const formData = ref({
 
 const registerUser = async () => {
   try {
-    const response = await axios.post('/register', formData.value);
+    const response = await axios.post('/api/register', formData.value);
     console.log('User registered:', response.data);
     // You can handle the response here, e.g., show a success message
   } catch (error) {
