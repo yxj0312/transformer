@@ -17,6 +17,11 @@
         <label class="font-semibold">Password:</label>
         <input v-model="formData.password" type="password" class="w-full border rounded-md p-2">
       </div>
+
+      <div>
+        <label class="font-semibold">Confirm Password:</label>
+        <input v-model="formData.password_confirmation" type="password" class="w-full border rounded-md p-2">
+      </div>
       
     <div>
       <label class="font-semibold">Role:</label>
