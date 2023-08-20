@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="loginUser" class="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
         <div>
-        <label class="font-semibold">Email:</label>
-        <input v-model="formData.email" type="email" class="w-full border rounded-md p-2">
+        <label class="font-semibold">Name:</label>
+        <input v-model="formData.name" type="name" class="w-full border rounded-md p-2">
         </div>
         
         <div>
@@ -17,3 +17,23 @@
         </div>
     </form>
 </template>
+
+<script setup>
+import { ref } from 'vue';
+import axios from 'axios';
+
+const formData = ref({
+    name: '',
+    password: '',
+});
+
+
+const loginUser = async () => {
+    try {
+        const response = await axios.post('/api/login', formData.value);
+        console.log(response.data);
+    } catch (error) {
+        console.log(error.response.data);
+    }
+};
+</script>
