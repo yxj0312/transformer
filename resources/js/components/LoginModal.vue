@@ -1,12 +1,13 @@
 <template>
   <Modal :isOpen="isOpen" title="Login" @close="close">
-    <!-- Your login form content here -->
+    <LoginForm />
   </Modal>
 </template>
 
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue';
 import Modal from './Modal.vue'; // Import the Modal component
+import LoginForm from './LoginForm.vue'; // Import the LoginForm component
 
 const props = defineProps({
   isOpen: Boolean,
