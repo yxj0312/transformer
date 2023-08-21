@@ -7,10 +7,19 @@
         <a href="#" class="text-white">Products</a>
         <a href="#" class="text-white">About Us</a>
         <a href="#" class="text-white">Contact</a>
+        
+        <!-- Profile Icon -->
+        <div v-if="$store.state.auth.isLoggedIn" class="text-white cursor-pointer" @click="openProfile">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <!-- Your profile icon SVG code here -->
+          </svg>
+        </div>
+        
         <!-- User Registration Button -->
-        <button class="text-white" @click="showRegistrationModal">Register</button>
+        <button class="text-white" @click="showRegistrationModal" v-if="!$store.state.auth.isLoggedIn">Register</button>
+        
         <!-- User Login Button -->
-        <button class="text-white" @click="showLoginModal">Login</button>
+        <button class="text-white" @click="showLoginModal" v-if="!$store.state.auth.isLoggedIn">Login</button>
       </div>
     </div>
   </nav>
@@ -29,6 +38,7 @@ import LoginModal from './LoginModal.vue';
 
 const isRegistrationModalVisible = ref(false);
 const isLoginModalVisible = ref(false);
+const isLoggedIn = ref(false);
 
 const showRegistrationModal = () => {
   isRegistrationModalVisible.value = true;
