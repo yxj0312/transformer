@@ -8,7 +8,9 @@ import '../css/app.css';
 // Alpine.start();
 
 import { createApp } from 'vue';
+import { createPinia } from 'pinia'
 import App from './views/App.vue'; // 这里假设你的根组件为 App.vue
 
-createApp(App).mount('#app');
+const pinia = createPinia()
+createApp(App).use(pinia).mount('#app');
 
