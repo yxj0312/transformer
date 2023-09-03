@@ -34,6 +34,7 @@
 import { ref } from 'vue';
 import RegistrationModal from './RegistrationModal.vue';
 import LoginModal from './LoginModal.vue';
+import { useAuthStore } from '../services/authStore.js';
 
 const isRegistrationModalVisible = ref(false);
 const isLoginModalVisible = ref(false);

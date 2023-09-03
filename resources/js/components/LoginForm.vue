@@ -21,6 +21,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useAuthStore } from '../services/authStore.js';
 
 const formData = ref({
     email: '',
