@@ -27,6 +27,7 @@ const formData = ref({
     password: '',
 });
 
+const authStore = useAuthStore();
 
 const loginUser = async () => {
     try {
