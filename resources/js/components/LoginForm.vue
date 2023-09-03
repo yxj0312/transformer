@@ -32,6 +32,7 @@ const authStore = useAuthStore();
 const loginUser = async () => {
     try {
         const response = await axios.post('/api/login', formData.value);
+        authStore.login();
         console.log(response.data);
     } catch (error) {
         console.log(error.response.data);
