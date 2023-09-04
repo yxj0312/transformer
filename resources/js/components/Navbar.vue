@@ -9,16 +9,16 @@
         <a href="#" class="text-white">Contact</a>
         
         <!-- Profile Icon -->
-        <!-- <div v-if="$store.state.auth.isLoggedIn" class="text-white cursor-pointer" @click="openProfile">
+        <div v-if="authStore.isLoggedIn" class="text-white cursor-pointer" @click="openProfile">
           <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           </svg>
-        </div> -->
+        </div>
         
         <!-- User Registration Button -->
-        <!-- <button class="text-white" @click="showRegistrationModal" v-if="!$store.state.auth.isLoggedIn">Register</button> -->
+        <button class="text-white" @click="showRegistrationModal" v-else>Register</button>
         
         <!-- User Login Button -->
-        <!-- <button class="text-white" @click="showLoginModal" v-if="!$store.state.auth.isLoggedIn">Login</button> -->
+        <button class="text-white" @click="showLoginModal" v-else>Login</button>
       </div>
     </div>
   </nav>
@@ -38,7 +38,7 @@ import { useAuthStore } from '../services/authStore.js';
 
 const isRegistrationModalVisible = ref(false);
 const isLoginModalVisible = ref(false);
-const isLoggedIn = ref(false);
+const authStore = useAuthStore();
 
 const showRegistrationModal = () => {
   isRegistrationModalVisible.value = true;
