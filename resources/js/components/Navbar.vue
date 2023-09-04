@@ -27,7 +27,7 @@
   <RegistrationModal :isOpen="isRegistrationModalVisible" @close="closeRegistrationModal" />
 
   <!-- Login Modal -->
-  <LoginModal :isOpen="isLoginModalVisible" @close="closeLoginModal" />
+  <LoginModal :isOpen="isLoginModalVisible" @close="closeLoginModal" @login-success="console.log('123')"/>
 </template>
 
 <script setup>
@@ -60,4 +60,5 @@ const closeLoginModal = () => {
 // Call these functions inside the corresponding modal functions
 // For example, after a successful registration, close the registration modal and show a success message
 // Similarly, after successful login, close the login modal and perform further actions
+
 </script>

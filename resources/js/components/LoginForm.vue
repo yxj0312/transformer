@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineEmits } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from '../services/authStore.js';
 
@@ -29,14 +29,16 @@ const formData = ref({
 });
 
 const authStore = useAuthStore();
+const emits = defineEmits();
 
 const loginUser = async () => {
     try {
         const response = await axios.post('/api/login', formData.value);
         authStore.login();
+        emits('login-success'); // Emit the custom "login-success" event
         console.log(response.data);
     } catch (error) {
-        console.log(error.response.data);
+        console.log(error);
     }
 };
 </script>
