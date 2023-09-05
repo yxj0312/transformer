@@ -1,6 +1,6 @@
 <template>
   <Modal :isOpen="isOpen" title="Login">
-    <LoginForm />
+    <LoginForm @login-success="handleLoginSuccess"/>
   </Modal>
 </template>
 
@@ -13,7 +13,7 @@ const props = defineProps({
   isOpen: Boolean,
 });
 
-// const emits = defineEmits();
+const emits = defineEmits();
 
 // const close = () => {
 //   emits('close');
@@ -21,6 +21,7 @@ const props = defineProps({
 
 const handleLoginSuccess = () => {
   console.log('Login successful');
+  emits('close'); 
   // close(); // Close the login modal
   // Redirect to the homepage, you may need to use Vue Router or another method for this
 };
