@@ -37,6 +37,11 @@ const loginUser = async () => {
         authStore.login();
         emits('login-success'); // Emit the custom "login-success" event
         console.log(response.data);
+        // Assuming the API response contains a "token" field
+        const token = response.data.token;
+
+        // Store the token in Local Storage
+        localStorage.setItem('token', token);
     } catch (error) {
         console.log(error);
     }
