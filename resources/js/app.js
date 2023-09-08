@@ -5,7 +5,7 @@ import '../css/app.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia'
 import App from './views/App.vue'; //
-import router from "./router";  这里假设你的根组件为 App.vue
+import router from "./router"; 
 
 
 const pinia = createPinia()
