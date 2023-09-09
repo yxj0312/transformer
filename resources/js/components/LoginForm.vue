@@ -22,6 +22,7 @@
 import { ref, defineEmits } from 'vue';
 import axios from 'axios';
 import { useAuthStore } from '../services/authStore.js';
+import { useRouter } from "vue-router";
 
 const formData = ref({
     email: '',
@@ -30,6 +31,7 @@ const formData = ref({
 
 const authStore = useAuthStore();
 const emits = defineEmits();
+const router = useRouter();
 
 const loginUser = async () => {
     try {
@@ -37,11 +39,13 @@ const loginUser = async () => {
         authStore.login();
         emits('login-success'); // Emit the custom "login-success" event
         console.log(response.data);
+
         // Assuming the API response contains a "token" field
         const token = response.data.token;
 
         // Store the token in Local Storage
         localStorage.setItem('token', token);
+        router.push("/");
     } catch (error) {
         console.log(error);
     }
