@@ -15,7 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ProductController::class, 'index'])->name('product.index');
+
+// create a route to app.blade.php with url '/'
+Route::get('/', function () {
+    return view('layouts/app');
+});
+// Route::get('/', [ProductController::class, 'index'])->name('product.index');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');

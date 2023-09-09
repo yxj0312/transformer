@@ -1,5 +1,4 @@
 <template>
-  
     <!-- Use the Navbar component -->
     <Navbar />
 
@@ -31,8 +30,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
-
+import { ref } from 'vue';
 import Navbar from '../components/Navbar.vue';
 import HeroSection from '../components/HeroSection.vue';
 import ProductCard from '../components/ProductCard.vue';
@@ -45,10 +43,5 @@ const featuredProducts = ref([
     description: 'Description of Product 1',
     price: '$19.99',
   },
-  // Add more products here
 ]);
 </script>
-
-<style>
-/* Your styles here */
-</style>
