@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // create a route to app.blade.php with url '/'
 Route::get('/', function () {
     return view('layouts/app');
-});
+})->middleware('auth');
 // Route::get('/', [ProductController::class, 'index'])->name('product.index');
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
