@@ -11,11 +11,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use \Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
-    protected $userRepository;
-    protected $authService;
+    protected UserRepositoryInterface $userRepository;
+    protected AuthServiceInterface $authService;
 
     public function __construct(UserRepositoryInterface $userRepository, AuthServiceInterface $authService)
     {
@@ -23,7 +24,7 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
     
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         // Validate the user
         $validatedData = $request->validated();
@@ -44,7 +45,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         // Validate the user
         $credentials = $request->validated();
