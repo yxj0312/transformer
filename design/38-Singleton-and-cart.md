@@ -177,3 +177,174 @@ class CartController extends AbstractController
 这样，您可以在整个 Symfony 应用程序中使用单一的购物车实例，无需担心多个实例之间的状态不一致。
 
 请注意，上述示例是一个通用示例，您需要根据您的具体购物车实体类和项目需求来调整代码。这个示例的关键点是使用 Symfony 的依赖注入容器确保购物车是一个单例。
+
+// src/Controller/CartController.php
+namespace App\Controller;
+
+use App\Service\CartService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class CartController extends AbstractController
+{
+    private $cartService;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+    }
+
+    public function addToCart(Request $request): Response
+    {
+        $productId = $request->query->get('product_id');
+        $quantity = $request->query->get('quantity');
+
+        // 获取购物车实例
+        $cart = $this->cartService->getInstance();
+
+        // 假设 $productId 和 $quantity 来自请求参数
+        // 可以根据 $productId 查询商品信息并创建商品对象
+
+        // 将商品添加到购物车
+        $cart->addItem($product, $quantity);
+
+        // 保存购物车状态
+        $this->cartService->saveCart($cart);
+
+        // 返回购物车页面或重定向到其他页面
+        return $this->redirectToRoute('cart');
+    }
+
+    public function viewCart(): Response
+    {
+        // 获取购物车实例
+        $cart = $this->cartService->getInstance();
+
+        // 获取购物车中的商品列表
+        $items = $cart->getItems();
+
+        // 可以渲染购物车页面并显示商品列表
+        return $this->render('cart/index.html.twig', ['items' => $items]);
+    }
+
+    public function checkout(): Response
+    {
+        // 获取购物车实例
+        $cart = $this->cartService->getInstance();
+
+        // 处理结账逻辑，生成订单等
+
+        // 清空购物车
+        $cart->clear();
+
+        // 返回订单成功页面或重定向到其他页面
+        return $this->redirectToRoute('order_success');
+    }
+}
+
+在 Laravel 中，您可以使用依赖注入和绑定（Binding）来实现购物车服务的单例。下面是一个示例购物车服务类以及在 Laravel 中如何绑定它作为单例的示例代码：
+
+首先，创建购物车服务类 `CartService`，以及一个购物车项 `CartItem` 类：
+
+```php
+// app/Services/CartService.php
+namespace App\Services;
+
+class CartService
+{
+    private $cart;
+
+    public function __construct()
+    {
+        $this->cart = session('cart', []);
+    }
+
+    public function addToCart($product, $quantity)
+    {
+        // 添加商品到购物车
+        $this->cart[$product->id] = new CartItem($product, $quantity);
+        session(['cart' => $this->cart]);
+    }
+
+    public function getCart()
+    {
+        return $this->cart;
+    }
+
+    // 其他购物车相关方法，例如移除商品、清空购物车等
+}
+
+// app/Services/CartItem.php
+namespace App\Services;
+
+class CartItem
+{
+    public $product;
+    public $quantity;
+
+    public function __construct($product, $quantity)
+    {
+        $this->product = $product;
+        $this->quantity = $quantity;
+    }
+}
+```
+
+然后，在 `App\Providers\AppServiceProvider` 中绑定 `CartService` 作为单例：
+
+```php
+// app/Providers/AppServiceProvider.php
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+use App\Services\CartService;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function register()
+    {
+        $this->app->singleton(CartService::class, function ($app) {
+            return new CartService();
+        });
+    }
+
+    // ...
+}
+```
+
+现在，购物车服务类 `CartService` 已经绑定为单例。无论在您的控制器中的哪个方法中依赖注入 `CartService`，都将获得同一个实例，确保购物车的数据在整个应用程序生命周期内保持一致。
+
+以下是如何在 Laravel 控制器中使用购物车服务的示例：
+
+```php
+// app/Http/Controllers/CartController.php
+namespace App\Http\Controllers;
+
+use App\Services\CartService;
+use App\Product;
+use Illuminate\Http\Request;
+
+class CartController extends Controller
+{
+    public function addToCart(Request $request, CartService $cartService)
+    {
+        $product = Product::find($request->input('product_id'));
+        $quantity = $request->input('quantity');
+        
+        $cartService->addToCart($product, $quantity);
+        
+        // 重定向到购物车页面或其他页面
+    }
+
+    public function viewCart(CartService $cartService)
+    {
+        $cart = $cartService->getCart();
+        
+        // 渲染购物车页面并显示商品列表
+        return view('cart.index', ['cart' => $cart]);
+    }
+}
+```
+
+这里的 `CartService` 使用了 Laravel 的依赖注入，确保控制器中的每个方法都获得相同的购物车服务实例。同样，购物车的实现可以根据项目的需求进行调整，上述代码只是一个示例。购物车数据被保存在会话中，以保持购物车状态。
